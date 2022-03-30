@@ -88,12 +88,13 @@ const testCards = [
   },
 ];
 
-export default function CardGrid(props) {
+export default function CardGrid({activeCards, setActive}) {
   let cards = testCards;
+
   return (
     <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 md:gap-5 lg:gap-6 overflow-hidden p-5">
       {cards.map((card, idx) => {
-        return <Card card={card} key={card.id} />;
+        return <Card card={card} key={card.id} active={activeCards.includes(card.id)} setActive={setActive}/>;
       })}
     </div>
   );
