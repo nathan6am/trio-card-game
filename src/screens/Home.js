@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import MainMenu from "./menus/MainMenu";
 import PlayMenu from "./menus/PlayMenu";
-
+import SinglePlayerMenu from "./menus/SinglePlayerMenu";
 export default function Home() {
   return (
     <div>
@@ -14,8 +14,8 @@ export default function Home() {
         />
       </div>
       <div className="flex items-center justify-center">
-        <div className="p-10 w-[500px] rounded-lg l mt-10  flex items-center justify-center">
-          <div className="w-[70%] min-h-[300px]">
+        <div className="p-10 w-[400px] rounded-lg l mt-10 menu-card shadow-lg flex items-center justify-center">
+          <div className="w-[90%] min-h-[300px]">
             <ActiveMenu />
           </div>
         </div>
@@ -31,6 +31,8 @@ const ActiveMenu = () => {
       return <MainMenu />;
     case "play":
       return <PlayMenu />;
+    case "singlePlayer":
+      return <SinglePlayerMenu />;
     default:
       return <MainMenu />;
   }

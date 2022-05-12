@@ -24,6 +24,7 @@ export default function (state = initialState, action) {
         activeMenu: menu,
         previousMenu: state.activeMenu,
       };
+
     default:
       return state;
   }

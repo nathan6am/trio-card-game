@@ -6,3 +6,10 @@ export const changeMenu = (menuId) => {
     payload: menuId,
   };
 };
+
+export const previousMenu = () => {
+  return {
+    type: actionTypes.PREVIOUS_MENU,
+    payload: null,
+  };
+};

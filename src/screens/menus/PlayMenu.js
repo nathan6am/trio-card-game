@@ -9,11 +9,14 @@ export default function PlayMenu() {
   const dispatch = useDispatch();
   return (
     <div className="flex flex-col">
+      <h1 className="text-center text-pastelRed-300 text-2xl mb-3 menu-title">
+        New Game
+      </h1>
       <MenuButton
         color="primary"
-        size="sm"
+        size="md"
         onClick={() => {
-          console.log("new single player");
+          dispatch(changeMenu("singlePlayer"));
         }}
       >
         <MdPerson className="inline text-xl mb-1 mr-2" />
@@ -21,7 +24,7 @@ export default function PlayMenu() {
       </MenuButton>
       <MenuButton
         color="primary"
-        size="sm"
+        size="md"
         onClick={() => {
           console.log("new multi player");
         }}
@@ -31,7 +34,7 @@ export default function PlayMenu() {
       </MenuButton>
       <MenuButton
         color="primary"
-        size="sm"
+        size="md"
         onClick={() => {
           console.log("new multi player");
         }}
@@ -41,7 +44,7 @@ export default function PlayMenu() {
       </MenuButton>
       <MenuButton
         color="danger"
-        size="sm"
+        size="md"
         onClick={() => {
           dispatch(changeMenu("main"));
         }}
