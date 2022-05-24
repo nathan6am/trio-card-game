@@ -7,33 +7,26 @@ import { changeMenu } from "../../redux/actionCreators";
 import Select from "react-select";
 import Switch from "react-switch";
 import CardOptionsModal from "../../components/CardOptionsModal";
-import {
-  createSinglePlayerGame,
-  startSinglePlayerGame,
-} from "../../redux/actionCreators";
-export default function SinglePlayerMenu() {
+
+export default function CreateLobbyMenu() {
   const dispatch = useDispatch();
   const [cardOptionsOpen, setCardOptionsOpen] = useState(false);
   const modeOptions = [
     { value: "standard", label: "Standard" },
-    { value: "zen", label: "Zen" },
     { value: "timed", label: "Timed" },
   ];
-  const difficultyOptions = [
-    { value: "easy", label: "Easy" },
-    { value: "medium", label: "Medium" },
-    { value: "hard", label: "Hard" },
-    { value: "impossible", label: "Impossible" },
-  ];
-  const [gameMode, setGameMode] = useState("standard");
-  const [difficulty, setDifficulty] = useState("easy");
-  const [hintsEnabled, setHintsEnabled] = useState(false);
 
+  const [gameMode, setGameMode] = useState("standard");
+  const [timeLimitIndex, setTimeLimitIndex] = useState(0);
+  const [tiebreakEnabled, setTiebreakEnabled] = useState(false);
+  const [timeLimitEnabled, setTimeLimitEnabled] = useState(false);
+
+  const timeLimitOptions = [{ value: 0, label: "unlimited" }];
   const getGameOptions = () => {
     return {
       gameMode: gameMode,
-      timeLimit: null,
-      hintsEnabled: hintsEnabled,
+      timeLimit: timeLimitEnabled,
+      tiebreakEnabled: tiebreakEnabled,
     };
   };
   return (
@@ -45,12 +38,10 @@ export default function SinglePlayerMenu() {
         }}
       />
       <div className="flex flex-col">
-        <h1 className="text-center text-pastelRed-300 text-2xl mb-3 menu-title">
-          Play Solo
-        </h1>
+        <h1 className="menu-header menu-title">New Lobby</h1>
         <div className="m-2 mb-5">
           <div className="flex flex-row items-center">
-            <h3 className="mb-1 text-pastelRed-300 mr-2">Game Mode</h3>
+            <h3 className="menu-label mr-2">Game Mode</h3>
             <a
               className="text-pastelRed-300 hover:text-pastelRed-200 cursor-pointer"
               onClick={() => {
@@ -70,30 +61,28 @@ export default function SinglePlayerMenu() {
             }}
           />
         </div>
-        {gameMode === "timeAttack" ? (
-          <div className="m-2 mb-5">
-            <h3 className="mb-1 text-pastelRed-300">Difficulty</h3>
-
-            <Select
-              options={difficultyOptions}
-              defaultValue={difficultyOptions[0]}
-              value={difficultyOptions.find(
-                (option) => option.value === difficulty
-              )}
-              onChange={(option) => {
-                setDifficulty(option.value);
-              }}
-            />
-          </div>
-        ) : null}
-        <div className="flex flex-row justify-between m-2 mb-5">
-          <h3 className="mb-1 text-pastelRed-300">Allow Hints</h3>
+        <div className="input-row">
+          <h3 className="menu-label">Enable Tiebreaker</h3>
 
           <Switch
             onChange={() => {
-              setHintsEnabled(!hintsEnabled);
+              setTiebreakEnabled(!tiebreakEnabled);
             }}
-            checked={hintsEnabled}
+            checked={tiebreakEnabled}
+            uncheckedIcon={false}
+            checkedIcon={false}
+            offColor={"#c1c1c1"}
+            onColor={"#4cf0a9"}
+          />
+        </div>
+        <div className="">
+          <h3 className="menu-label">Time Limit</h3>
+
+          <Switch
+            onChange={() => {
+              setTimeLimitEnabled(!timeLimitEnabled);
+            }}
+            checked={timeLimitEnabled}
             uncheckedIcon={false}
             checkedIcon={false}
             offColor={"#c1c1c1"}
@@ -113,25 +102,18 @@ export default function SinglePlayerMenu() {
             Customize Cards
           </a>
         </div>
-        <MenuButton
-          color="success"
-          size="md"
-          onClick={() => {
-            dispatch(createSinglePlayerGame(getGameOptions()));
-            dispatch(startSinglePlayerGame());
-          }}
-        >
-          <FaPlay className="inline text-xl  mr-2" />
-          Start Game
+        <MenuButton color="success" size="md" onClick={() => {}}>
+          <FaPlay className="button-icon" />
+          Create Lobby
         </MenuButton>
         <MenuButton
           color="danger"
           size="md"
           onClick={() => {
-            dispatch(changeMenu("play"));
+            dispatch(changeMenu("playPartyMode"));
           }}
         >
-          <MdExitToApp className="inline text-xl mb-1 mr-2" flipHorizontal />
+          <MdExitToApp className="button-icon mr-2" flipHorizontal />
           Back
         </MenuButton>
       </div>

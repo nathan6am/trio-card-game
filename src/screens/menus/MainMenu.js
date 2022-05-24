@@ -44,7 +44,7 @@ export default function MainMenu() {
         How to Play
       </MenuButton>
       <MenuButton
-        color="secondary"
+        color="primary"
         size="md"
         onClick={() => {
           console.log("new multi player");
