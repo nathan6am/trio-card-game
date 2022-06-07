@@ -7,12 +7,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeMenu } from "../../redux/actionCreators";
 import Select from "react-select";
 import Switch from "react-switch";
-import CardOptionsModal from "../../components/CardOptionsModal";
+import CardSettings from "./CardSettings";
 import { useWebsocket } from "../../socket";
 import { joinLobby } from "../../redux/actionCreators";
 export default function CreateLobbyMenu() {
   const dispatch = useDispatch();
   const [cardOptionsOpen, setCardOptionsOpen] = useState(false);
+  const [cardOptions, setCardOptions] = useState({});
+  const onSave = (options) => {
+    setCardOptions(options);
+    setCardOptionsOpen(false);
+  };
   const modeOptions = [
     { value: "standard", label: "Standard" },
     { value: "timed", label: "Timed" },
@@ -30,12 +35,6 @@ export default function CreateLobbyMenu() {
     { value: 600, label: "10 minutes" },
     { value: 900, label: "15 minutes" },
   ];
-  const getGameOptions = () => {
-    return {
-      gameMode: gameMode,
-      timeLimit: timeLimitOptions[timeLimitIndex].value,
-    };
-  };
   const onIncrement = () => {
     if (timeLimitIndex === 4) return;
     setTimeLimitIndex(timeLimitIndex + 1);
@@ -53,8 +52,10 @@ export default function CreateLobbyMenu() {
           gameOptions: {
             mode: gameMode,
             maxPlayers: maxPlayers,
-            timeLimit: timeLimitOptions[timeLimitIndex].value,
+            timeLimit:
+              gameMode === "timed" && timeLimitOptions[timeLimitIndex].value,
           },
+          deckOptions: cardOptions,
         },
       },
       function (lobby) {
@@ -69,92 +70,95 @@ export default function CreateLobbyMenu() {
   };
   return (
     <div>
-      <CardOptionsModal
-        isOpen={cardOptionsOpen}
-        toggle={() => {
-          setCardOptionsOpen(!cardOptionsOpen);
-        }}
-      />
-      <div className="flex flex-col">
-        <h1 className="menu-header menu-title">New Lobby</h1>
-        <div className="m-2 mb-5">
-          <div className="flex flex-row items-center">
-            <h3 className="menu-label mr-2">Game Mode</h3>
-            <a
-              className="text-pastelRed-300 hover:text-pastelRed-200 cursor-pointer"
-              onClick={() => {
-                console.log("show info");
-              }}
-            >
-              <FaInfoCircle className="mb-[2px]" />
-            </a>
-          </div>
+      {cardOptionsOpen ? (
+        <CardSettings
+          onSave={onSave}
+          onCancel={() => {
+            setCardOptionsOpen(false);
+          }}
+        />
+      ) : (
+        <div className="flex flex-col">
+          <h1 className="menu-header menu-title">New Lobby</h1>
+          <div className="m-2 mb-5">
+            <div className="flex flex-row items-center">
+              <h3 className="menu-label mr-2">Game Mode</h3>
+              <a
+                className="text-pastelRed-300 hover:text-pastelRed-200 cursor-pointer"
+                onClick={() => {
+                  console.log("show info");
+                }}
+              >
+                <FaInfoCircle className="mb-[2px]" />
+              </a>
+            </div>
 
-          <Select
-            options={modeOptions}
-            defaultValue={modeOptions[0]}
-            value={modeOptions.find((option) => option.value === gameMode)}
-            onChange={(option) => {
-              setGameMode(option.value);
-            }}
-          />
-        </div>
-        {gameMode === "timed" && (
-          <div className="m-2">
-            <h3 className="menu-label">Time Limit</h3>
-            <IncrementSelector
-              value={timeLimitOptions[timeLimitIndex].label}
-              onIncrement={onIncrement}
-              onDecrement={onDecrement}
+            <Select
+              options={modeOptions}
+              defaultValue={modeOptions[0]}
+              value={modeOptions.find((option) => option.value === gameMode)}
+              onChange={(option) => {
+                setGameMode(option.value);
+              }}
             />
           </div>
-        )}
+          {gameMode === "timed" && (
+            <div className="m-2">
+              <h3 className="menu-label">Time Limit</h3>
+              <IncrementSelector
+                value={timeLimitOptions[timeLimitIndex].label}
+                onIncrement={onIncrement}
+                onDecrement={onDecrement}
+              />
+            </div>
+          )}
 
-        <div className="m-3">
-          <h3 className="menu-label">Max Players</h3>
-          <IncrementSelector
-            value={`${maxPlayers} Players`}
-            onIncrement={() => {
-              if (maxPlayers < 6) {
-                setMaxPlayers(maxPlayers + 1);
-              }
-            }}
-            onDecrement={() => {
-              if (maxPlayers > 2) {
-                setMaxPlayers(maxPlayers - 1);
-              }
-            }}
-          />
-        </div>
+          <div className="m-3">
+            <h3 className="menu-label">Max Players</h3>
+            <IncrementSelector
+              value={`${maxPlayers} Players`}
+              onIncrement={() => {
+                if (maxPlayers < 6) {
+                  setMaxPlayers(maxPlayers + 1);
+                }
+              }}
+              onDecrement={() => {
+                if (maxPlayers > 2) {
+                  setMaxPlayers(maxPlayers - 1);
+                }
+              }}
+            />
+          </div>
 
-        <div className="m-2 mb-5">
-          <a
-            className="text-pastelRed-300 hover:text-pastelRed-200 cursor-pointer flex flex-row items-center"
+          <div className="m-2 mb-5">
+            <a
+              className="text-pastelRed-300 hover:text-pastelRed-200 cursor-pointer flex flex-row items-center"
+              onClick={() => {
+                setCardOptionsOpen(true);
+              }}
+            >
+              <span className="text-2xl">
+                <FaEdit className="mr-2" />
+              </span>
+              Customize Cards
+            </a>
+          </div>
+          <MenuButton color="success" size="md" onClick={createLobby}>
+            <FaPlay className="button-icon" />
+            Create Lobby
+          </MenuButton>
+          <MenuButton
+            color="danger"
+            size="md"
             onClick={() => {
-              setCardOptionsOpen(true);
+              dispatch(changeMenu("playPartyMode"));
             }}
           >
-            <span className="text-2xl">
-              <FaEdit className="mr-2" />
-            </span>
-            Customize Cards
-          </a>
+            <MdExitToApp className="button-icon mr-2" flipHorizontal />
+            Back
+          </MenuButton>
         </div>
-        <MenuButton color="success" size="md" onClick={createLobby}>
-          <FaPlay className="button-icon" />
-          Create Lobby
-        </MenuButton>
-        <MenuButton
-          color="danger"
-          size="md"
-          onClick={() => {
-            dispatch(changeMenu("playPartyMode"));
-          }}
-        >
-          <MdExitToApp className="button-icon mr-2" flipHorizontal />
-          Back
-        </MenuButton>
-      </div>
+      )}
     </div>
   );
 }

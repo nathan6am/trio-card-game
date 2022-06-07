@@ -21,9 +21,12 @@ const colorCodes = {
   green: "#27ae60",
   blue: "#0000FF",
   purple: "#800080",
+  orange: "#f38701",
+  yellow: "#FDDA0D",
+  black: "#000000",
 };
 
-const GenerateFill = ({ type, color }) => {
+export const GenerateFill = ({ type, color }) => {
   switch (type) {
     case "solid":
       return null;
@@ -87,6 +90,25 @@ const GenerateFill = ({ type, color }) => {
             y="10"
             fill={colorCodes[color]}
           ></rect>
+        </pattern>
+      );
+    case "dots":
+      return (
+        <pattern
+          id={`${type}_${color}`}
+          x="0"
+          y="0"
+          width="15"
+          height="15"
+          patternUnits="userSpaceOnUse"
+        >
+          <circle
+            cx="5"
+            cy="5"
+            r="5"
+            style={{ stroke: "none" }}
+            fill={colorCodes[color]}
+          />
         </pattern>
       );
 

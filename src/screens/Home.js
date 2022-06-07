@@ -14,8 +14,8 @@ export default function Home() {
   return (
     <div className="flex-1 h-screen overflow-y-auto flex-col">
       <>
-        <div className="flex items-center justify-center p-10">
-          <img src={require("../img/logo.png")} width="600" />
+        <div className="flex items-center justify-center p-7">
+          <img src={require("../img/logo.png")} width="500" />
         </div>
         {displayName ? (
           <h2 className="text-center">{`Hi, ${displayName}`}</h2>

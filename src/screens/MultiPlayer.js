@@ -16,9 +16,25 @@ import TimerProgressBar from "../components/TimerProgressBar";
 
 export default function MultiPlayer() {
   const dispatch = useDispatch();
+  const [hasStarted, setHasStarted] = useState(false);
   const user = useSelector((state) => state.user);
   const lobby = useSelector((state) => state.lobby);
   const game = lobby.game;
+  const timeLimit = game.options.timeLimit;
+  const startTime = Date.parse(game.startTime);
+  const endTime = Date.parse(game.endTime);
+
+  const startCountdown = useTimer({
+    expiryTimestamp: startTime,
+    autoStart: true,
+    onExpire: () => {
+      setHasStarted(true);
+    },
+  });
+  const gameTimer = useTimer({
+    expiryTimestamp: endTime,
+    autoStart: true,
+  });
   const socket = useWebsocket();
   const [playSuccess] = useSound(Success);
   const [playFail] = useSound(Fail);
@@ -62,30 +78,39 @@ export default function MultiPlayer() {
   return (
     <div className="flex items-center justify-center h-full">
       <div className="container sm:p-5">
-        {/* <div className="p-5">
-          <p>{`Score: ${game.stats.score} Deck: ${game.deck.length} Time: ${
-            gameTimer.minutes
-          }:${
-            gameTimer.seconds < 10 ? "0" + gameTimer.seconds : gameTimer.seconds
-          }`}</p>
-          <p>{`avg: ${game.stats.averageTimeToFind}`}</p>
-          {game.isOver ? <p>over</p> : <p>not over</p>}
-          <TimerProgressBar
-            percent={
-              toSeconds(
-                limitTimer.hours,
-                limitTimer.minutes,
-                limitTimer.seconds
-              ) / 300
-            }
-          />
-        </div> */}
-        <CardGrid
-          activeCards={activeCards}
-          setActive={setActive}
-          cards={game.cardsInPlay}
-        />
+        {hasStarted ? (
+          <>
+            <ScoreBoard scores={game.scores} />
+            <CardGrid
+              percentTimeRemaining={
+                toSeconds(
+                  gameTimer.hours,
+                  gameTimer.minutes,
+                  gameTimer.seconds
+                ) / timeLimit
+              }
+              timeLimit={timeLimit}
+              activeCards={activeCards}
+              setActive={setActive}
+              cards={game.cardsInPlay}
+            />
+          </>
+        ) : (
+          <h1>{startCountdown.seconds}</h1>
+        )}
       </div>
+    </div>
+  );
+}
+
+function ScoreBoard({ scores }) {
+  return (
+    <div className="w-80 flex flex-col">
+      {scores.map((score) => {
+        return (
+          <p className="text-white">{`${score.user.displayName}: ${score.score}`}</p>
+        );
+      })}
     </div>
   );
 }

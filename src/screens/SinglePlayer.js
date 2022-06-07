@@ -3,7 +3,7 @@ import CardGrid from "../components/CardGrid";
 import { useSelector, useDispatch } from "react-redux";
 import { verifySet } from "../services/gameLogic";
 import { scoreSinglePlayerGame } from "../redux/actionCreators";
-
+import CardSettings from "./menus/CardSettings";
 //Timer Hooks
 import { useStopwatch, useTimer } from "react-timer-hook";
 import { toSeconds } from "../services/timeUtil";
@@ -15,8 +15,10 @@ import Fail from "../sounds/Fail.mp3";
 import TimerProgressBar from "../components/TimerProgressBar";
 
 function SinglePlayer() {
+  const game = useSelector((state) => state.singlePlayerGame.game); // Game Object from redux store
   const time = new Date();
-  time.setSeconds(time.getSeconds() + 300);
+  const timeLimit = game.options.timeLimit;
+  time.setSeconds(time.getSeconds() + timeLimit);
 
   const dispatch = useDispatch();
   const scoreTimer = useStopwatch({ autoStart: true }); // Track time per score, resets after every score
@@ -28,7 +30,6 @@ function SinglePlayer() {
       console.log("expired");
     },
   });
-  const game = useSelector((state) => state.singlePlayerGame.game); // Game Object from redux store
 
   //Sound effects
   const [playSuccess] = useSound(Success);
@@ -66,27 +67,39 @@ function SinglePlayer() {
   }, [activeCards]);
 
   return (
-    <div className="flex items-center justify-center h-full">
-      <div className="container sm:p-5">
-        <div className="p-5">
-          <p>{`Score: ${game.stats.score} Deck: ${game.deck.length} Time: ${
-            gameTimer.minutes
-          }:${
-            gameTimer.seconds < 10 ? "0" + gameTimer.seconds : gameTimer.seconds
-          }`}</p>
-          <p>{`avg: ${game.stats.averageTimeToFind}`}</p>
-          {game.isOver ? <p>over</p> : <p>not over</p>}
-          <TimerProgressBar
-            percent={
-              toSeconds(
-                limitTimer.hours,
-                limitTimer.minutes,
-                limitTimer.seconds
-              ) / 300
-            }
-          />
+    <div className="flex flex-col items-center justify-center h-full">
+      <div className="container md:p-5">
+        <div className="md:mx-5 md:p-5 text-white bg-black/[0.2] rounded-md flex flex-row justify-between">
+          <div className="flex flex-col md:flex-row ">
+            <p className="mx-3">{`Trios found: ${game.stats.score}`}</p>
+            {timeLimit ? (
+              <p className="mx-3">{`Time Remaining: ${limitTimer.minutes}:${
+                limitTimer.seconds < 10
+                  ? "0" + limitTimer.seconds
+                  : limitTimer.seconds
+              }`}</p>
+            ) : (
+              <p className="mx-3">{`Time Elapsed: ${gameTimer.minutes}:${
+                gameTimer.seconds < 10
+                  ? "0" + gameTimer.seconds
+                  : gameTimer.seconds
+              }`}</p>
+            )}
+            <p className="mx-3">{`Average time per Trio: ${
+              game.stats.averageTimeToFind || " - : - -"
+            }`}</p>
+          </div>
+          <div>Get Hint</div>
         </div>
         <CardGrid
+          timeLimit={timeLimit}
+          percentTimeRemaining={
+            toSeconds(
+              limitTimer.hours,
+              limitTimer.minutes,
+              limitTimer.seconds
+            ) / timeLimit
+          }
           activeCards={activeCards}
           setActive={setActive}
           cards={game.cardsInPlay}
