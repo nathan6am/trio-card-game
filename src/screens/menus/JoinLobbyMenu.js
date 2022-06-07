@@ -2,11 +2,15 @@ import React, { useState, useRef, useEffect } from "react";
 import MenuButton from "../../components/MenuButton";
 import ReactCodeInput from "react-code-input";
 import { useDispatch, useSelector } from "react-redux";
-import { changeMenu, changeDisplayName } from "../../redux/actionCreators";
+import {
+  changeMenu,
+  changeDisplayName,
+  joinLobby,
+} from "../../redux/actionCreators";
 import { useWebsocket } from "../../socket";
+import { MdExitToApp } from "react-icons/md";
 export default function JoinLobbyMenu() {
-  const displayName = useSelector((state) => state.user.displayName);
-  const socketId = useSelector((state) => state.user.socketId);
+  const user = useSelector((state) => state.user);
   const socket = useWebsocket();
   const dispatch = useDispatch();
   const inputRef = useRef();
@@ -23,23 +27,18 @@ export default function JoinLobbyMenu() {
   };
   return (
     <div className="flex flex-col">
-      <h1 className="text-center text-pastelRed-300 text-2xl mb-3 menu-title">
-        Welcome
-      </h1>
+      <h1 className="menu-header menu-title">Welcome</h1>
       <div className="m-2">
-        <label className="text-pastelRed-300 mb-2">
-          Enter 6-Digit Lobby Code:
-        </label>
+        <label className="menu-label">Enter 6-Digit Lobby Code:</label>
         <input
           autoFocus
           ref={inputRef}
-          maxLength={16}
+          maxLength={6}
           autoCapitalize="on"
           autoComplete="off"
-          className="appearance-none caret-pastelRed-300 border rounded w-full mt-2 mb-5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="menu-text-input"
           type="text"
           name="name"
-          placeholder="Display name"
           onChange={handleChange}
           value={lobbyId}
         />
@@ -49,39 +48,33 @@ export default function JoinLobbyMenu() {
         size="md"
         onClick={() => {
           socket.emit(
-            "lobby:create",
-            {
-              socketId: socketId,
-              displayName: displayName,
-            },
-            function (lobby) {
-              console.log(lobby);
-            }
-          );
-        }}
-      >
-        Create
-      </MenuButton>
-      <MenuButton
-        color={"success"}
-        size="md"
-        onClick={() => {
-          socket.emit(
             "lobby:join",
             {
-              user: {
-                socketId: socketId,
-                displayName: displayName,
-              },
+              user: user,
               lobbyId: lobbyId,
             },
             function (lobby) {
-              console.log(lobby);
+              if (!lobby) {
+                console.error("unabletojoinlobby");
+              } else {
+                dispatch(joinLobby(lobby, user));
+              }
             }
           );
         }}
       >
-        Continue
+        Join Lobby
+      </MenuButton>
+
+      <MenuButton
+        color="danger"
+        size="md"
+        onClick={() => {
+          dispatch(changeMenu("playPartyMode"));
+        }}
+      >
+        <MdExitToApp className="button-icon mr-2" flipHorizontal />
+        Back
       </MenuButton>
     </div>
   );

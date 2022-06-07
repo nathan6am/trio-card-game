@@ -3,34 +3,23 @@ import CardGrid from "../components/CardGrid";
 import { useSelector, useDispatch } from "react-redux";
 import { verifySet } from "../services/gameLogic";
 import { scoreSinglePlayerGame } from "../redux/actionCreators";
-
+import { useWebsocket } from "../socket";
 //Timer Hooks
 import { useStopwatch, useTimer } from "react-timer-hook";
 import { toSeconds } from "../services/timeUtil";
-
+import { updateLobby } from "../redux/actionCreators";
 // Sound Effects Imports
 import useSound from "use-sound";
 import Success from "../sounds/Success.mp3";
 import Fail from "../sounds/Fail.mp3";
 import TimerProgressBar from "../components/TimerProgressBar";
 
-function SinglePlayer() {
-  const time = new Date();
-  time.setSeconds(time.getSeconds() + 300);
-
+export default function MultiPlayer() {
   const dispatch = useDispatch();
-  const scoreTimer = useStopwatch({ autoStart: true }); // Track time per score, resets after every score
-  const gameTimer = useStopwatch({ autoStart: true }); // Tracks overall game time
-  const limitTimer = useTimer({
-    expiryTimestamp: time,
-    autoStart: true,
-    onExpire: () => {
-      console.log("expired");
-    },
-  });
-  const game = useSelector((state) => state.singlePlayerGame.game); // Game Object from redux store
-
-  //Sound effects
+  const user = useSelector((state) => state.user);
+  const lobby = useSelector((state) => state.lobby);
+  const game = lobby.game;
+  const socket = useWebsocket();
   const [playSuccess] = useSound(Success);
   const [playFail] = useSound(Fail);
 
@@ -44,31 +33,36 @@ function SinglePlayer() {
     }
   };
 
-  //Trigger verification/scoring when 3 cards are selected
   useEffect(() => {
     if (activeCards.length !== 3) return;
     console.log(verifySet(activeCards));
     if (verifySet(activeCards)) {
       console.log("valid");
-      const timeToFind = toSeconds(
-        scoreTimer.hours,
-        scoreTimer.minutes,
-        scoreTimer.seconds
+      socket.emit(
+        "game:score",
+        {
+          lobbyId: lobby.id,
+          user: user,
+          setToScore: activeCards,
+        },
+        function (success) {
+          if (success) {
+            setActiveCards([]);
+            playSuccess();
+          } else {
+            setActiveCards([]);
+          }
+        }
       );
-      scoreTimer.reset();
-      dispatch(scoreSinglePlayerGame(activeCards, timeToFind));
-      setActiveCards([]);
-      playSuccess();
     } else {
       setActiveCards([]);
       playFail();
     }
   }, [activeCards]);
-
   return (
     <div className="flex items-center justify-center h-full">
       <div className="container sm:p-5">
-        <div className="p-5">
+        {/* <div className="p-5">
           <p>{`Score: ${game.stats.score} Deck: ${game.deck.length} Time: ${
             gameTimer.minutes
           }:${
@@ -85,7 +79,7 @@ function SinglePlayer() {
               ) / 300
             }
           />
-        </div>
+        </div> */}
         <CardGrid
           activeCards={activeCards}
           setActive={setActive}
@@ -95,5 +89,3 @@ function SinglePlayer() {
     </div>
   );
 }
-
-export default SinglePlayer;

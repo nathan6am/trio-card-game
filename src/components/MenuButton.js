@@ -2,7 +2,8 @@ import React from "react";
 import useSound from "use-sound";
 import rolloverClick from "../sounds/RolloverClick.mp3";
 import select from "../sounds/Select.mp3";
-
+import { useState } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 const buttonConfig = {
   primary: `bg-pastelBlue-400 hover:bg-pastelBlue-300 border-pastelBlue-500 hover:border-pastelBlue-400`,
   secondary:
@@ -11,7 +12,7 @@ const buttonConfig = {
     "bg-pastelGreen-500 hover:bg-pastelGreen-400 border-pastelGreen-600 hover:border-pastelGreen-500",
   danger:
     "bg-pastelRed-300 hover:bg-pastelRed-200 border-pastelRed-500 hover:border-pastelRed-400",
-  disabled: "bg-gray-400",
+  disabled: "bg-gray-400 border-gray-600",
 
   sizes: {
     sm: "py-1 px-4",
@@ -20,14 +21,14 @@ const buttonConfig = {
   },
 };
 
-const MenuButton = ({ children, color, onClick, size, disabled }) => {
+const MenuButton = ({ children, color, onClick, size, disabled, loading }) => {
   const [playRolloverClick] = useSound(rolloverClick);
   const [playSelect] = useSound(select);
   return (
     <button
       disabled={disabled}
       style={{ fontFamily: "futura-pt, sans-serif", fontWeight: 400 }}
-      className={`m-2 font-sans shadow-lg  text-lg text-white text-center rounded-md text-md ${buttonConfig[color]} ${buttonConfig.sizes[size]}`}
+      className={`m-2 font-sans shadow-lg border-b-4 text-lg text-white text-center rounded-md text-md ${buttonConfig[color]} ${buttonConfig.sizes[size]}`}
       onClick={() => {
         playSelect();
         onClick();
@@ -38,7 +39,13 @@ const MenuButton = ({ children, color, onClick, size, disabled }) => {
         }
       }}
     >
-      {children}
+      {loading ? (
+        <div className="flex flex-1 items-center justify-center my-1">
+          <ClipLoader color={"#ffffff"} loading={loading} size={20} />
+        </div>
+      ) : (
+        children
+      )}
     </button>
   );
 };

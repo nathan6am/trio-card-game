@@ -137,6 +137,11 @@ export function verifySet(cards) {
   return checkSet(cards);
 }
 
+export function getHint (cards) {
+  const combos = shuffle(combinations(cards, 3));
+  return combos.find((combo) => checkSet(combo));
+}
+
 //Returns true if array of cards submitted contains at least one set
 function checkForSets(cards) {
   const combos = combinations(cards, 3);

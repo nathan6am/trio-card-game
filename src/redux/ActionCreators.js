@@ -49,9 +49,35 @@ export const scoreSinglePlayerGame = (cards, timeToFind) => {
 };
 
 export const updateStoredSocketId = (socketId) => {
-  console.log(socketId);
   return {
     type: actionTypes.UPDATE_SOCKET_ID,
     payload: socketId,
+  };
+};
+
+export const joinLobby = (lobby, currentUser) => {
+  return {
+    type: actionTypes.JOIN_LOBBY,
+    payload: {
+      lobby: lobby,
+      currentUser: currentUser,
+    },
+  };
+};
+
+export const updateLobby = (lobby, currentUser) => {
+  return {
+    type: actionTypes.UPDATE_LOBBY,
+    payload: {
+      lobby: lobby,
+      currentUser: currentUser,
+    },
+  };
+};
+
+export const updateLobbyGameState = (gameState) => {
+  return {
+    type: actionTypes.UPDATE_LOBBY_GAME_STATE,
+    payload: gameState,
   };
 };

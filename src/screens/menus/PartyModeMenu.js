@@ -1,7 +1,11 @@
 import React from "react";
+
+//Components
 import MenuButton from "../../components/MenuButton";
 import { FaEdit, FaPlay } from "react-icons/fa";
 import { MdExitToApp } from "react-icons/md";
+
+//Redux
 import { useDispatch } from "react-redux";
 import { changeMenu } from "../../redux/actionCreators";
 

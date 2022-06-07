@@ -1,9 +1,8 @@
-import { SET_DISPLAY_NAME, UPDATE_SOCKET_ID } from "../actions";
+import { SET_DISPLAY_NAME, UPDATE_SOCKET_ID, UPDATE_LOBBY } from "../actions";
 
 const initialState = {
   displayName: "",
   stats: {},
-  serveruid: undefined,
 };
 
 export default function (state = initialState, action) {
@@ -17,6 +16,16 @@ export default function (state = initialState, action) {
       return {
         ...state,
         socketId: action.payload,
+      };
+    case UPDATE_LOBBY:
+      const id = state.socketId;
+      const { lobby } = action.payload;
+      console.log(lobby);
+      const user = lobby.users.find((user) => user.socketId === id);
+
+      return {
+        ...state,
+        ready: user.ready,
       };
     default:
       return state;

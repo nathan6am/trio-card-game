@@ -8,41 +8,26 @@ import SinglePlayer from "./SinglePlayer";
 import PartyModeMenu from "./menus/PartyModeMenu";
 import JoinLobbyMenu from "./menus/JoinLobbyMenu";
 import CreateLobbyMenu from "./menus/CreateLobbyMenu";
+import LobbyMenu from "./menus/LobbyMenu";
 export default function Home() {
   const displayName = useSelector((state) => state.user.displayName);
-  const singlePlayerActive = useSelector(
-    (state) => state.singlePlayerGame.active
-  );
-  const [gameIsActive, setGameIsActive] = useState(false);
-  useEffect(() => {
-    setGameIsActive(singlePlayerActive);
-  }, [singlePlayerActive]);
   return (
     <div className="flex-1 h-screen overflow-y-auto flex-col">
-      {singlePlayerActive ? <p>active</p> : <p>inactive</p>}
-      {gameIsActive ? (
-        <ActiveGame />
-      ) : (
-        <>
-          <div className="flex items-center justify-center p-10">
-            <img
-              src={require("../img/logo.png")}
-              width="600
-        "
-            />
-          </div>
-          {displayName ? (
-            <h2 className="text-center">{`Hi, ${displayName}`}</h2>
-          ) : null}
-          <div className="flex flex-grow items-start justify-center">
-            <div className="p-10 w-[400px] rounded-lg l mt-10 menu-card shadow-lg flex items-center justify-center">
-              <div className="w-[90%] min-h-[300px]">
-                <ActiveMenu />
-              </div>
+      <>
+        <div className="flex items-center justify-center p-10">
+          <img src={require("../img/logo.png")} width="600" />
+        </div>
+        {displayName ? (
+          <h2 className="text-center">{`Hi, ${displayName}`}</h2>
+        ) : null}
+        <div className="flex flex-grow items-start justify-center">
+          <div className="p-10 w-[400px] rounded-lg l mt-10 menu-card shadow-lg flex items-center justify-center">
+            <div className="w-[90%] min-h-[300px]">
+              <ActiveMenu />
             </div>
           </div>
-        </>
-      )}
+        </div>
+      </>
     </div>
   );
 }
@@ -67,8 +52,4 @@ const ActiveMenu = () => {
     default:
       return <MainMenu />;
   }
-};
-
-const ActiveGame = () => {
-  return <SinglePlayer />;
 };

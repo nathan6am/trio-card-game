@@ -11,16 +11,16 @@
     @apply inline text-xl mb-1 mr-2;
   }
   .menu-label {
-    @apply mb-1 text-pastelRed-300;
+    @apply mb-1 text-pastelBlue-500;
   }
   .menu-header {
-    @apply text-center text-pastelRed-300 text-2xl mb-3;
+    @apply text-center text-pastelBlue-500 text-2xl mb-3;
   }
   .input-row {
     @apply flex flex-row justify-between m-2 mb-5;
   }
   .menu-text-input {
-    @apply appearance-none caret-pastelRed-300 border rounded w-full mt-2 mb-5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-pastelRed-100 focus:ring-2;
+    @apply appearance-none caret-pastelBlue-300 border rounded w-full mt-2 mb-5 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-pastelBlue-100 focus:ring-2;
   }
 }
 

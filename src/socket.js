@@ -16,8 +16,8 @@ const WebsocketProvider = ({ children }) => {
 
   useEffect(() => {
     try {
-      const socketConnection = io("http://localhost:8000/", options);
-      setConnection(socketConnection);
+      const socket = io("http://localhost:8000/", options);
+      setConnection(socket);
     } catch (err) {
       console.log(err);
     }

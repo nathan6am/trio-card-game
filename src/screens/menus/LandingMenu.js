@@ -14,6 +14,7 @@ export default function LandingMenu() {
     return () => {};
   }, []);
 
+  const [loading, setLoading] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [isNameValid, setIsNameValid] = useState(true);
 
@@ -29,13 +30,16 @@ export default function LandingMenu() {
   };
 
   const onSubmit = () => {
+    setLoading(true)
     isTextClean(displayName)
       .then((isBad) => {
         if (isBad) {
           setIsNameValid(false);
           setDisplayName("");
           inputRef.current.focus();
+          setLoading(false)
         } else {
+          setLoading(false)
           dispatch(changeDisplayName(displayName));
           dispatch(changeMenu("main"));
         }
@@ -68,6 +72,7 @@ export default function LandingMenu() {
         ) : null}
       </div>
       <MenuButton
+        loading={loading}
         color={displayName ? "success" : "disabled"}
         size="md"
         disabled={!displayName}

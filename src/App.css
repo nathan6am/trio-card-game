@@ -73,13 +73,30 @@
   box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.2);
 }
 .offwhite-bg {
+  background-color: #181716;
+}
+.offwhite-bg2 {
   background-color: #fdf4dc;
 }
 .menu-card {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .menu-title {
   font-family: "grad";
   font-weight: 700;
+}
+
+.progress-div {
+  background-color: rgba(220, 220, 220, 0.5);
+  height: 10px;
+  border-radius: 0.5rem;
+}
+
+.progress {
+  background-color: #f47372;
+  height: 10px;
+  border-radius: 1rem;
+  transition: 1s ease;
+  transition-delay: 0.5s;
 }

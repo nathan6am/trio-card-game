@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import MenuButton from "../../components/MenuButton";
-import { FaEdit, FaInfoCircle, FaPlay, FaGlobe } from "react-icons/fa";
-import { MdPerson, MdPeopleAlt, MdExitToApp } from "react-icons/md";
-import { useDispatch } from "react-redux";
+import { FaEdit, FaInfoCircle, FaPlay } from "react-icons/fa";
+import IncrementSelector from "../../components/IncrementSelector";
+import { MdExitToApp } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
 import { changeMenu } from "../../redux/actionCreators";
 import Select from "react-select";
 import Switch from "react-switch";
 import CardOptionsModal from "../../components/CardOptionsModal";
-
+import { useWebsocket } from "../../socket";
+import { joinLobby } from "../../redux/actionCreators";
 export default function CreateLobbyMenu() {
   const dispatch = useDispatch();
   const [cardOptionsOpen, setCardOptionsOpen] = useState(false);
@@ -16,18 +18,54 @@ export default function CreateLobbyMenu() {
     { value: "timed", label: "Timed" },
   ];
 
+  const user = useSelector((state) => state.user);
   const [gameMode, setGameMode] = useState("standard");
-  const [timeLimitIndex, setTimeLimitIndex] = useState(0);
-  const [tiebreakEnabled, setTiebreakEnabled] = useState(false);
-  const [timeLimitEnabled, setTimeLimitEnabled] = useState(false);
-
-  const timeLimitOptions = [{ value: 0, label: "unlimited" }];
+  const [timeLimitIndex, setTimeLimitIndex] = useState(2);
+  const [maxPlayers, setMaxPlayers] = useState(4);
+  const socket = useWebsocket();
+  const timeLimitOptions = [
+    { value: 60, label: "1 minute" },
+    { value: 180, label: "3 minutes" },
+    { value: 300, label: "5 minutes" },
+    { value: 600, label: "10 minutes" },
+    { value: 900, label: "15 minutes" },
+  ];
   const getGameOptions = () => {
     return {
       gameMode: gameMode,
-      timeLimit: timeLimitEnabled,
-      tiebreakEnabled: tiebreakEnabled,
+      timeLimit: timeLimitOptions[timeLimitIndex].value,
     };
+  };
+  const onIncrement = () => {
+    if (timeLimitIndex === 4) return;
+    setTimeLimitIndex(timeLimitIndex + 1);
+  };
+  const onDecrement = () => {
+    if (timeLimitIndex === 0) return;
+    setTimeLimitIndex(timeLimitIndex - 1);
+  };
+  const createLobby = () => {
+    socket.emit(
+      "lobby:create",
+      {
+        user: user,
+        options: {
+          gameOptions: {
+            mode: gameMode,
+            maxPlayers: maxPlayers,
+            timeLimit: timeLimitOptions[timeLimitIndex].value,
+          },
+        },
+      },
+      function (lobby) {
+        if (!lobby) {
+          console.error("Unable to create lobby");
+        } else {
+          console.log(lobby);
+          dispatch(joinLobby(lobby, user));
+        }
+      }
+    );
   };
   return (
     <div>
@@ -61,34 +99,34 @@ export default function CreateLobbyMenu() {
             }}
           />
         </div>
-        <div className="input-row">
-          <h3 className="menu-label">Enable Tiebreaker</h3>
+        {gameMode === "timed" && (
+          <div className="m-2">
+            <h3 className="menu-label">Time Limit</h3>
+            <IncrementSelector
+              value={timeLimitOptions[timeLimitIndex].label}
+              onIncrement={onIncrement}
+              onDecrement={onDecrement}
+            />
+          </div>
+        )}
 
-          <Switch
-            onChange={() => {
-              setTiebreakEnabled(!tiebreakEnabled);
+        <div className="m-3">
+          <h3 className="menu-label">Max Players</h3>
+          <IncrementSelector
+            value={`${maxPlayers} Players`}
+            onIncrement={() => {
+              if (maxPlayers < 6) {
+                setMaxPlayers(maxPlayers + 1);
+              }
             }}
-            checked={tiebreakEnabled}
-            uncheckedIcon={false}
-            checkedIcon={false}
-            offColor={"#c1c1c1"}
-            onColor={"#4cf0a9"}
+            onDecrement={() => {
+              if (maxPlayers > 2) {
+                setMaxPlayers(maxPlayers - 1);
+              }
+            }}
           />
         </div>
-        <div className="">
-          <h3 className="menu-label">Time Limit</h3>
 
-          <Switch
-            onChange={() => {
-              setTimeLimitEnabled(!timeLimitEnabled);
-            }}
-            checked={timeLimitEnabled}
-            uncheckedIcon={false}
-            checkedIcon={false}
-            offColor={"#c1c1c1"}
-            onColor={"#4cf0a9"}
-          />
-        </div>
         <div className="m-2 mb-5">
           <a
             className="text-pastelRed-300 hover:text-pastelRed-200 cursor-pointer flex flex-row items-center"
@@ -102,7 +140,7 @@ export default function CreateLobbyMenu() {
             Customize Cards
           </a>
         </div>
-        <MenuButton color="success" size="md" onClick={() => {}}>
+        <MenuButton color="success" size="md" onClick={createLobby}>
           <FaPlay className="button-icon" />
           Create Lobby
         </MenuButton>

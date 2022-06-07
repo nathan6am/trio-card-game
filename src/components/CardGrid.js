@@ -3,7 +3,7 @@ import Card from "./Card";
 
 export default function CardGrid({ activeCards, setActive, cards }) {
   return (
-    <div className="grid grid-cols-3 sm:grid-cols-4 gap-5 md:gap-5 lg:gap-6 overflow-hidden p-5">
+    <div className="grid grid-cols-3 sm:grid-cols-4 gap-5 md:gap-5 lg:gap-6 overflow-hidden sm:p-5 py-5 px-2">
       {cards.map((card, idx) => {
         return (
           <Card
