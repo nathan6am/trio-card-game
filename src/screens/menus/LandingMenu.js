@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 
 import MenuButton from "../../components/MenuButton";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { changeMenu, changeDisplayName } from "../../redux/actionCreators";
 import isTextClean from "../../services/profanityFilter";
 export default function LandingMenu() {
@@ -30,16 +30,16 @@ export default function LandingMenu() {
   };
 
   const onSubmit = () => {
-    setLoading(true)
+    setLoading(true);
     isTextClean(displayName)
       .then((isBad) => {
         if (isBad) {
           setIsNameValid(false);
           setDisplayName("");
           inputRef.current.focus();
-          setLoading(false)
+          setLoading(false);
         } else {
-          setLoading(false)
+          setLoading(false);
           dispatch(changeDisplayName(displayName));
           dispatch(changeMenu("main"));
         }

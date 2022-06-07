@@ -8,7 +8,7 @@ import SinglePlayer from "./SinglePlayer";
 import PartyModeMenu from "./menus/PartyModeMenu";
 import JoinLobbyMenu from "./menus/JoinLobbyMenu";
 import CreateLobbyMenu from "./menus/CreateLobbyMenu";
-import LobbyMenu from "./menus/LobbyMenu";
+import AdminLeft from "./menus/AdminLeft";
 export default function Home() {
   const displayName = useSelector((state) => state.user.displayName);
   return (
@@ -18,7 +18,7 @@ export default function Home() {
           <img src={require("../img/logo.png")} width="500" />
         </div>
         {displayName ? (
-          <h2 className="text-center">{`Hi, ${displayName}`}</h2>
+          <h2 className="text-center text-white">{`Hi, ${displayName}`}</h2>
         ) : null}
         <div className="flex flex-grow items-start justify-center">
           <div className="p-10 w-[400px] rounded-lg l mt-10 menu-card shadow-lg flex items-center justify-center">
@@ -49,6 +49,8 @@ const ActiveMenu = () => {
       return <CreateLobbyMenu />;
     case "joinLobby":
       return <JoinLobbyMenu />;
+    case "adminLeft":
+      return <AdminLeft />;
     default:
       return <MainMenu />;
   }

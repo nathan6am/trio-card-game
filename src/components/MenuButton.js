@@ -2,7 +2,6 @@ import React from "react";
 import useSound from "use-sound";
 import rolloverClick from "../sounds/RolloverClick.mp3";
 import select from "../sounds/Select.mp3";
-import { useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 const buttonConfig = {
   primary: `bg-pastelBlue-400 hover:bg-pastelBlue-300 border-pastelBlue-500 hover:border-pastelBlue-400`,

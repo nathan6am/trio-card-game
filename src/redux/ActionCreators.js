@@ -81,3 +81,9 @@ export const updateLobbyGameState = (gameState) => {
     payload: gameState,
   };
 };
+
+export const leaveLobby = () => {
+  return {
+    type: actionTypes.LEAVE_LOBBY,
+  };
+};

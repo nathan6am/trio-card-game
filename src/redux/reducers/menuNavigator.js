@@ -16,6 +16,7 @@ export default function (state = initialState, action) {
     "singleOptions",
     "createLobby",
     "joinLobby",
+    "adminLeft",
   ];
   switch (action.type) {
     case SET_ACTIVE_MENU:

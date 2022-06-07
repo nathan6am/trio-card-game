@@ -80,6 +80,7 @@ export default function MultiPlayer() {
       <div className="container sm:p-5">
         {hasStarted ? (
           <>
+            <p>{gameTimer.seconds}</p>
             <ScoreBoard scores={game.scores} />
             <CardGrid
               percentTimeRemaining={
@@ -108,7 +109,10 @@ function ScoreBoard({ scores }) {
     <div className="w-80 flex flex-col">
       {scores.map((score) => {
         return (
-          <p className="text-white">{`${score.user.displayName}: ${score.score}`}</p>
+          <p
+            key={score.user.socketId}
+            className="text-white"
+          >{`${score.user.displayName}: ${score.score}`}</p>
         );
       })}
     </div>

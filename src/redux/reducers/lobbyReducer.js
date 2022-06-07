@@ -54,6 +54,12 @@ export default function (state = initialState, action) {
         game: action.payload,
       };
     }
+    case LEAVE_LOBBY: {
+      return {
+        ...state,
+        connectedToLobby: false,
+      };
+    }
     default:
       return state;
   }
