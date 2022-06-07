@@ -7,7 +7,6 @@ import { useDispatch } from "react-redux";
 import { changeMenu } from "../../redux/actionCreators";
 import Select from "react-select";
 import Switch from "react-switch";
-import CardOptionsModal from "../../components/CardOptionsModal";
 import CardSettings from "./CardSettings";
 import {
   createSinglePlayerGame,
