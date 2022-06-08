@@ -25,7 +25,6 @@ export default function userReducer(state = initialState, action) {
     case UPDATE_LOBBY:
       const id = state.socketId;
       const { lobby } = action.payload;
-      console.log(lobby);
       const user = lobby.users.find((user) => user.socketId === id);
 
       return {

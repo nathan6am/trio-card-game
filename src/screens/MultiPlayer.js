@@ -28,7 +28,6 @@ export default function MultiPlayer({ onQuit }) {
   const startCountdown = useTimer({
     expiryTimestamp: startTime,
     onExpire: () => {
-      console.log("game starting");
       setHasStarted(true);
     },
   });
@@ -52,9 +51,7 @@ export default function MultiPlayer({ onQuit }) {
 
   useEffect(() => {
     if (activeCards.length !== 3) return;
-    console.log(verifySet(activeCards));
     if (verifySet(activeCards)) {
-      console.log("valid");
       socket.emit(
         "game:score",
         {

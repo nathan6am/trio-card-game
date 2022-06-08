@@ -11,7 +11,6 @@ import {
 import LobbyMenu from "../components/lobby/LobbyMenu";
 import MultiPlayer from "./MultiPlayer";
 import GameRecap from "../components/lobby/GameRecap";
-import toast from "react-hot-toast";
 
 export default function LobbyScreen() {
   const dispatch = useDispatch();
@@ -39,6 +38,9 @@ export default function LobbyScreen() {
 
   useEffect(() => {
     socket.on("lobby:update", (lobby) => {
+      if (!lobby) {
+        console.error("something went wrong");
+      }
       dispatch(updateLobby(lobby, user));
     });
     socket.on("lobby:admin-left", () => {
