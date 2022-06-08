@@ -4,23 +4,33 @@ import MenuButton from "../menu/MenuButton";
 import { FaPlay } from "react-icons/fa";
 import { MdExitToApp } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-export default function SinglePlayerRecap() {
+import { exitSinglePlayer, changeMenu } from "../../redux/actionCreators";
+export default function SinglePlayerRecap({ onRestart }) {
+  const dispatch = useDispatch();
   const game = useSelector((state) => state.singlePlayerGame.game);
-  const storedSettings = useSelector(
-    (state) => state.settings.savedGameSettings
-  );
-
+  const onExit = () => {
+    dispatch(changeMenu("solo-mode"));
+    dispatch(exitSinglePlayer());
+  };
   return (
     <MenuContainer>
       <div className="flex flex-col">
         <h1 className="menu-header menu-title">Game Over!</h1>
-        <h2>Your Score: {game.stats.score}</h2>
-        <p>Average time per Trio: {game.stats.averageTimeToFind}s</p>
-        <MenuButton color="success" size="md">
+        <h2 className="text-center text-lg text-pastelBlue-500">
+          Your Score:{" "}
+          <span className="font-bold text-white">{game.stats.score}</span>
+        </h2>
+        <p className="text-pastelBlue-500 m-4 text-center">
+          Average time per Trio:{" "}
+          <span className="font-bold text-white">
+            {game.stats.averageTimeToFind || "-"}s
+          </span>
+        </p>
+        <MenuButton onClick={onRestart} color="success" size="md">
           <FaPlay className="inline text-xl  mr-2" />
           Play Again
         </MenuButton>
-        <MenuButton color="danger" size="md">
+        <MenuButton onClick={onExit} color="danger" size="md">
           <MdExitToApp className="inline text-xl mb-1 mr-2" />
           Exit
         </MenuButton>

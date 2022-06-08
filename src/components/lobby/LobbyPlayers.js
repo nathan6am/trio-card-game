@@ -1,21 +1,10 @@
 import React from "react";
 
-import {
-  PulseLoader,
-  PuffLoader,
-  BeatLoader,
-  BounceLoader,
-} from "react-spinners";
-const testPlayers = [
-  { displayName: "Player1", ready: false },
-  { displayName: "Player2", ready: true },
-];
+import { PulseLoader, PuffLoader, BeatLoader } from "react-spinners";
 
 export default function LobbyPlayers({ players, currentUser, maxPlayers }) {
   const emptySlots = maxPlayers - players.length;
-  const currentUserReady = players.find(
-    (player) => player.socketId === currentUser.socketId
-  ).ready;
+
   let otherPlayers = players.filter(
     (player) => player.socketId !== currentUser.socketId
   );

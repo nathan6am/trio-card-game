@@ -5,7 +5,7 @@ import { useWebsocket } from "./socket";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStoredSocketId } from "./redux/actionCreators";
 import SinglePlayer from "./screens/SinglePlayer";
-import MultiPlayer from "./screens/MultiPlayer";
+import { Toaster } from "react-hot-toast";
 import LobbyScreen from "./screens/LobbyScreen";
 export default function App() {
   const dispatch = useDispatch();
@@ -46,6 +46,7 @@ export default function App() {
       <div
         className={`flex items-stretch min-h-screen w-screen items-center justify-center ${themeClass}`}
       >
+        <Toaster position="top-right" />
         <ScreenToDisplay display={display} />
       </div>
     </>

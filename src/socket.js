@@ -16,7 +16,7 @@ const WebsocketProvider = ({ children }) => {
 
   useEffect(() => {
     try {
-      const socket = io("http://localhost:8000/", options);
+      const socket = io("https://damp-lowlands-35197.herokuapp.com/", options);
       setConnection(socket);
     } catch (err) {
       console.log(err);

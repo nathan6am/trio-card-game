@@ -26,7 +26,7 @@ export default function (state = initialState, action) {
         game: lobby.game,
         gameActive: lobby.gameActive,
         admin: userFromServer.isAdmin,
-        ready: userFromServer.ready,
+        ready: false,
       };
     }
 

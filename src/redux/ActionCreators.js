@@ -37,6 +37,25 @@ export const startSinglePlayerGame = () => {
     payload: null,
   };
 };
+export const endSinglePlayerGame = () => {
+  return {
+    type: actionTypes.END_SINGLE_PLAYER,
+    payload: null,
+  };
+};
+
+export const exitSinglePlayer = () => {
+  return {
+    type: actionTypes.EXIT_SINGLE_PLAYER,
+    payload: null,
+  };
+};
+export const restartSinglePlayerGame = (options) => {
+  return {
+    type: actionTypes.RESTART_SINGLE_PLAYER,
+    payload: options,
+  };
+};
 
 export const scoreSinglePlayerGame = (cards, timeToFind) => {
   return {

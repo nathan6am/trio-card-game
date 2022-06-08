@@ -7,9 +7,7 @@ import LobbyPlayers from "./LobbyPlayers";
 import MenuButton from "../menu/MenuButton";
 import { useWebsocket } from "../../socket";
 
-import { changeMenu, leaveLobby } from "../../redux/actionCreators";
-export default function LobbyMenu() {
-  const dispatch = useDispatch();
+export default function LobbyMenu({ onExit }) {
   const lobby = useSelector((state) => state.lobby);
   const user = useSelector((state) => state.user);
   const lobbyAdmin = lobby.users.find((user) => user.isAdmin);
@@ -23,14 +21,40 @@ export default function LobbyMenu() {
     navigator.clipboard.writeText(`${lobby.id}`);
     setTooltipText("Copied to clipboard!");
   };
-  const onExit = () => {
-    socket.emit("lobby:leave", { user: user, lobbyId: lobby.id }, (success) => {
-      if (success) {
-        dispatch(changeMenu("party-mode"));
-        dispatch(leaveLobby());
-      }
+
+  const onStart = () => {
+    socket.emit("game:start", lobby.id, function (success) {
+      if (!success) console.error("Unable to start game");
     });
   };
+
+  const notReady = () => {
+    socket.emit(
+      "lobby:set-ready",
+      {
+        user: user,
+        lobbyId: lobby.id,
+        readyState: false,
+      },
+      function (success) {
+        if (!success) console.error("Something went wrong");
+      }
+    );
+  };
+  const readyUp = () => {
+    socket.emit(
+      "lobby:set-ready",
+      {
+        user: user,
+        lobbyId: lobby.id,
+        readyState: true,
+      },
+      function (success) {
+        if (!success) console.error("Something went wrong");
+      }
+    );
+  };
+
   return (
     <div className="flex flex-grow items-center justify-center">
       <div className=" p-5 md:p-10 w-[600px] mt-10 rounded-lg l pt-10 menu-card shadow-lg flex items-center justify-center relative">
@@ -84,62 +108,18 @@ export default function LobbyMenu() {
               />
               <div className="mt-10 px-5 justify-center flex flex-col">
                 {!user.ready ? (
-                  <MenuButton
-                    color="success"
-                    size="md"
-                    onClick={() => {
-                      socket.emit(
-                        "lobby:set-ready",
-                        {
-                          user: user,
-                          lobbyId: lobby.id,
-                          readyState: true,
-                        },
-                        function (success) {
-                          console.log(success);
-                        }
-                      );
-                    }}
-                  >
+                  <MenuButton color="success" size="md" onClick={readyUp}>
                     Ready Up
                   </MenuButton>
                 ) : (
-                  <MenuButton
-                    color="danger"
-                    size="md"
-                    onClick={() => {
-                      socket.emit(
-                        "lobby:set-ready",
-                        {
-                          user: user,
-                          lobbyId: lobby.id,
-                          readyState: false,
-                        },
-                        function (success) {
-                          console.log(success);
-                        }
-                      );
-                    }}
-                  >
+                  <MenuButton color="danger" size="md" onClick={notReady}>
                     Not Ready
                   </MenuButton>
                 )}
                 {playersReady ? (
                   <>
                     {isAdmin ? (
-                      <MenuButton
-                        color="success"
-                        size="md"
-                        onClick={() => {
-                          socket.emit(
-                            "game:start",
-                            lobby.id,
-                            function (success) {
-                              console.log(success);
-                            }
-                          );
-                        }}
-                      >
+                      <MenuButton color="success" size="md" onClick={onStart}>
                         Start Game
                       </MenuButton>
                     ) : (

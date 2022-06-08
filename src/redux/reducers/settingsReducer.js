@@ -18,8 +18,10 @@ export default function setttingsReducer(state = initialState, action) {
     case SAVE_GAME_SETTINGS:
       return {
         ...state,
-        gameOptions: action.payload.gameOptions,
-        deckOptions: action.payload.deckOptions,
+        storedSettings: {
+          gameOptions: action.payload.gameOptions,
+          deckOptions: action.payload.deckOptions,
+        },
       };
     default:
       return state;

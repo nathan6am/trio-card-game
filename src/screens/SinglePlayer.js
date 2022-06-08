@@ -2,8 +2,14 @@ import React, { useState, useEffect } from "react";
 import CardGrid from "../components/game/CardGrid";
 import { useSelector, useDispatch } from "react-redux";
 import { verifySet } from "../util/gameLogic";
-import { scoreSinglePlayerGame } from "../redux/actionCreators";
-
+import {
+  scoreSinglePlayerGame,
+  endSinglePlayerGame,
+  restartSinglePlayerGame,
+} from "../redux/actionCreators";
+import SinglePlayerRecap from "../components/game/SinglePlayerRecap";
+import InfoBar from "../components/game/InfoBar";
+import toast from "react-hot-toast";
 //Timer Hooks
 import { useStopwatch, useTimer } from "react-timer-hook";
 import { toSeconds } from "../util/timeUtil";
@@ -15,18 +21,38 @@ import Fail from "../sounds/Fail.mp3";
 
 function SinglePlayer() {
   const game = useSelector((state) => state.singlePlayerGame.game); // Game Object from redux store
-  const time = new Date();
+
   const timeLimit = game.options.timeLimit;
-  time.setSeconds(time.getSeconds() + timeLimit);
+  const createExpiryStamp = () => {
+    const time = new Date();
+    const timeLimit = game.options.timeLimit;
+    time.setSeconds(time.getSeconds() + timeLimit);
+    return time;
+  };
 
   const dispatch = useDispatch();
+
+  const storedSettings = useSelector((state) => state.settings.storedSettings);
+
+  const onRestart = () => {
+    limitTimer.restart(createExpiryStamp(), true);
+    gameTimer.reset();
+    scoreTimer.reset();
+    dispatch(restartSinglePlayerGame(storedSettings));
+  };
+
+  const onQuit = () => {
+    dispatch(endSinglePlayerGame());
+  };
   const scoreTimer = useStopwatch({ autoStart: true }); // Track time per score, resets after every score
   const gameTimer = useStopwatch({ autoStart: true }); // Tracks overall game time
   const limitTimer = useTimer({
-    expiryTimestamp: time,
+    expiryTimestamp: createExpiryStamp(),
     autoStart: true,
     onExpire: () => {
-      console.log("expired");
+      if (timeLimit) {
+        dispatch(endSinglePlayerGame());
+      }
     },
   });
 
@@ -60,52 +86,45 @@ function SinglePlayer() {
       dispatch(scoreSinglePlayerGame(activeCards, timeToFind));
       setActiveCards([]);
       playSuccess();
+      toast.success("Great Job!");
     } else {
       setActiveCards([]);
       playFail();
+      toast.error("Invalid Trio");
     }
-  }, [activeCards]);
+  }, [activeCards, scoreTimer, dispatch, playFail, playSuccess, toast]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-full">
-      <div className="container md:p-5">
-        <div className=" md:mx-3 text-white p-2 md:p-5 bg-black/[0.2] rounded-md flex flex-row justify-between">
-          <div className="flex flex-col md:flex-row ">
-            <p className="mx-3">{`Trios found: ${game.stats.score}`}</p>
-            {timeLimit ? (
-              <p className="mx-3">{`Time Remaining: ${limitTimer.minutes}:${
-                limitTimer.seconds < 10
-                  ? "0" + limitTimer.seconds
-                  : limitTimer.seconds
-              }`}</p>
-            ) : (
-              <p className="mx-3">{`Time Elapsed: ${gameTimer.minutes}:${
-                gameTimer.seconds < 10
-                  ? "0" + gameTimer.seconds
-                  : gameTimer.seconds
-              }`}</p>
-            )}
-            <p className="mx-3">{`Average time per Trio: ${
-              game.stats.averageTimeToFind || " - : - -"
-            }`}</p>
+    <>
+      {game.isOver ? (
+        <SinglePlayerRecap onRestart={onRestart} />
+      ) : (
+        <div className="flex flex-col items-center justify-center h-full">
+          <div className="container md:p-5 items-center justify-center flex flex-col h-screen">
+            <InfoBar
+              limitTimer={limitTimer}
+              gameTimer={gameTimer}
+              onQuit={onQuit}
+              game={game}
+              timeLimit={timeLimit}
+            />
+            <CardGrid
+              timeLimit={timeLimit}
+              percentTimeRemaining={
+                toSeconds(
+                  limitTimer.hours,
+                  limitTimer.minutes,
+                  limitTimer.seconds
+                ) / timeLimit
+              }
+              activeCards={activeCards}
+              setActive={setActive}
+              cards={game.cardsInPlay}
+            />
           </div>
-          <div>Get Hint</div>
         </div>
-        <CardGrid
-          timeLimit={timeLimit}
-          percentTimeRemaining={
-            toSeconds(
-              limitTimer.hours,
-              limitTimer.minutes,
-              limitTimer.seconds
-            ) / timeLimit
-          }
-          activeCards={activeCards}
-          setActive={setActive}
-          cards={game.cardsInPlay}
-        />
-      </div>
-    </div>
+      )}
+    </>
   );
 }
 

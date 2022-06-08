@@ -71,7 +71,6 @@ export default function CreateLobby() {
         if (!lobby) {
           console.error("Unable to create lobby");
         } else {
-          console.log(lobby);
           dispatch(joinLobby(lobby, user));
         }
       }

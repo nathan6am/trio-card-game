@@ -8,7 +8,7 @@ const rankResults = (scores) => {
   let ranked = scores.sort((a, b) => (a.score < b.score ? 1 : -1));
   return ranked;
 };
-export default function GameRecap() {
+export default function GameRecap({ onExit, hideRecap }) {
   const game = useSelector((state) => state.lobby.game);
   let user = useSelector((state) => state.user);
   const ranked = rankResults(game.scores);
@@ -65,11 +65,11 @@ export default function GameRecap() {
           })}
         </div>
 
-        <MenuButton color="success" size="md">
+        <MenuButton onClick={hideRecap} color="success" size="md">
           <FaPlay className="inline text-xl  mr-2" />
           Play Again
         </MenuButton>
-        <MenuButton color="danger" size="md">
+        <MenuButton onClick={onExit} color="danger" size="md">
           <MdExitToApp className="inline text-xl mb-1 mr-2" />
           Exit
         </MenuButton>

@@ -3,6 +3,8 @@ import {
   START_SINGLE_PLAYER,
   END_SINGLE_PLAYER,
   CREATE_SINGLE_PLAYER,
+  RESTART_SINGLE_PLAYER,
+  EXIT_SINGLE_PLAYER,
 } from "../actions";
 import { newDeck, updateCards } from "../../util/gameLogic";
 
@@ -38,6 +40,34 @@ export default function singlePlayerGame(state = initialState, action) {
         active: true,
       };
     }
+
+    case RESTART_SINGLE_PLAYER: {
+      const { gameOptions, deckOptions } = action.payload;
+      const [cardsInPlay, initialDeck] = newDeck(deckOptions);
+      const game = {
+        cardsInPlay: cardsInPlay,
+        deck: initialDeck,
+        options: gameOptions,
+        stats: {
+          score: 0,
+        },
+        isOver: false,
+        active: true,
+      };
+      return {
+        ...state,
+        game: game,
+      };
+    }
+
+    case EXIT_SINGLE_PLAYER: {
+      const game = { ...state.game, isOver: true };
+      return {
+        ...state,
+        game: game,
+        active: false,
+      };
+    }
     case SCORE_SINGLE_PLAYER: {
       const set = action.payload.cardsToScore;
       const cardsInPlay = state.game.cardsInPlay;
@@ -55,11 +85,15 @@ export default function singlePlayerGame(state = initialState, action) {
             false
           );
           updatedStats.score = state.game.stats.score + 1;
-          if (!state.game.stats.averageTimeToFind) {
+          if (!updatedStats.times) {
+            updatedStats.times = [timeToFind];
             updatedStats.averageTimeToFind = timeToFind;
           } else {
-            updatedStats.averageTimeToFind =
-              (state.game.stats.averageTimeToFind + timeToFind) / 2;
+            updatedGame.stats.times.push(timeToFind);
+            updatedStats.averageTimeToFind = Math.floor(
+              updatedStats.times.reduce((a, b) => a + b) /
+                updatedStats.times.length
+            );
           }
           updatedGame.cardsInPlay = updatedCardsInPlay;
           updatedGame.stats = updatedStats;
@@ -76,11 +110,15 @@ export default function singlePlayerGame(state = initialState, action) {
             true
           );
           updatedStats.score = state.game.stats.score + 1;
-          if (!state.game.stats.averageTimeToFind) {
+          if (!updatedStats.times) {
+            updatedStats.times = [timeToFind];
             updatedStats.averageTimeToFind = timeToFind;
           } else {
-            updatedStats.averageTimeToFind =
-              (state.game.stats.averageTimeToFind + timeToFind) / 2;
+            updatedGame.stats.times.push(timeToFind);
+            updatedStats.averageTimeToFind = Math.floor(
+              updatedStats.times.reduce((a, b) => a + b) /
+                updatedStats.times.length
+            );
           }
           updatedGame.cardsInPlay = updatedCardsInPlay;
           updatedGame.stats = updatedStats;
@@ -97,13 +135,15 @@ export default function singlePlayerGame(state = initialState, action) {
             true
           );
           updatedStats.score = state.game.stats.score + 1;
-          if (!state.game.stats.averageTimeToFind) {
+          if (!updatedStats.times) {
+            updatedStats.times = [timeToFind];
             updatedStats.averageTimeToFind = timeToFind;
           } else {
-            updatedStats.averageTimeToFind =
-              (state.game.stats.averageTimeToFind * state.game.stats.score +
-                timeToFind) /
-              updatedStats.score;
+            updatedGame.stats.times.push(timeToFind);
+            updatedStats.averageTimeToFind = Math.floor(
+              updatedStats.times.reduce((a, b) => a + b) /
+                updatedStats.times.length
+            );
           }
           updatedGame.cardsInPlay = updatedCardsInPlay;
           updatedGame.stats = updatedStats;
