@@ -15,7 +15,9 @@ export default function SinglePlayerRecap({ onRestart }) {
   return (
     <MenuContainer>
       <div className="flex flex-col">
-        <h1 className="menu-header menu-title">Game Over!</h1>
+        <h1 className="menu-header menu-title text-pastelRed-400">
+          Game Over!
+        </h1>
         <h2 className="text-center text-lg text-pastelBlue-500">
           Your Score:{" "}
           <span className="font-bold text-white">{game.stats.score}</span>
