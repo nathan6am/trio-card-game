@@ -11,7 +11,7 @@ import MpInfoBar from "../components/lobby/MpInfoBar";
 import useSound from "use-sound";
 import Success from "../sounds/Success.mp3";
 import Fail from "../sounds/Fail.mp3";
-
+import Countdown from "../sounds/Countdown.mp3";
 export default function MultiPlayer({ onQuit }) {
   const dispatch = useDispatch();
   const [hasStarted, setHasStarted] = useState(false);
@@ -31,6 +31,7 @@ export default function MultiPlayer({ onQuit }) {
       setHasStarted(true);
     },
   });
+  const secondsToStart = startCountdown.seconds;
   const gameTimer = useTimer({
     expiryTimestamp: endTime,
     autoStart: true,
@@ -38,7 +39,7 @@ export default function MultiPlayer({ onQuit }) {
   const socket = useWebsocket();
   const [playSuccess] = useSound(Success, { volume: mute ? 0 : volume });
   const [playFail] = useSound(Fail, { volume: mute ? 0 : volume });
-
+  const [playCountdown] = useSound(Countdown, { volume: mute ? 0 : volume });
   //Manage Selected Cards
   const [activeCards, setActiveCards] = useState([]);
   const setActive = (id) => {
@@ -48,6 +49,9 @@ export default function MultiPlayer({ onQuit }) {
       setActiveCards([...activeCards, id]);
     }
   };
+  useEffect(() => {
+    if (secondsToStart === 3) playCountdown();
+  }, [secondsToStart]);
 
   useEffect(() => {
     if (activeCards.length !== 3) return;
@@ -103,7 +107,16 @@ export default function MultiPlayer({ onQuit }) {
             />
           </div>
         ) : (
-          <h1>{startCountdown.seconds}</h1>
+          <div className="container">
+            <div className="flex w-full h-full justify-center items-center flex-col">
+              <h1 className="menu-header menu-title text-4xl text-pastelRed-400 text-center">
+                Get Ready!
+              </h1>
+              <h1 className="menu-header menu-title text-8xl text-pastelRed-400 text-center">
+                {startCountdown.seconds}
+              </h1>
+            </div>
+          </div>
         )}
       </div>
     </div>
