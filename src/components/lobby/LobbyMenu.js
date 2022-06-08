@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { PulseLoader } from "react-spinners";
 import { MdContentCopy, MdExitToApp } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import ReactTooltip from "react-tooltip";
-import LobbyPlayers from "../../components/LobbyPlayers";
-import MenuButton from "../../components/MenuButton";
+import LobbyPlayers from "./LobbyPlayers";
+import MenuButton from "../menu/MenuButton";
 import { useWebsocket } from "../../socket";
 
 import { changeMenu, leaveLobby } from "../../redux/actionCreators";
@@ -26,7 +26,7 @@ export default function LobbyMenu() {
   const onExit = () => {
     socket.emit("lobby:leave", { user: user, lobbyId: lobby.id }, (success) => {
       if (success) {
-        dispatch(changeMenu("playPartyMode"));
+        dispatch(changeMenu("party-mode"));
         dispatch(leaveLobby());
       }
     });
@@ -36,7 +36,7 @@ export default function LobbyMenu() {
       <div className=" p-5 md:p-10 w-[600px] mt-10 rounded-lg l pt-10 menu-card shadow-lg flex items-center justify-center relative">
         <div
           onClick={onExit}
-          className="absolute top-3 right-5  cursor-pointer text-pastelRed-500 hover:text-pastelRed-300"
+          className="absolute top-3 right-5  cursor-pointer text-pastelRed-400 hover:text-pastelRed-300"
         >
           Exit to Menu <MdExitToApp className="text-3xl inline" />
         </div>

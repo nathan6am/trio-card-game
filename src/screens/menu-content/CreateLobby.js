@@ -1,40 +1,49 @@
 import React, { useState } from "react";
-import MenuButton from "../../components/MenuButton";
+
+//Components
+import IncrementSelector from "../../components/menu/IncrementSelector";
+import MenuButton from "../../components/menu/MenuButton";
 import { FaEdit, FaInfoCircle, FaPlay } from "react-icons/fa";
-import IncrementSelector from "../../components/IncrementSelector";
 import { MdExitToApp } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
-import { changeMenu } from "../../redux/actionCreators";
 import Select from "react-select";
-import Switch from "react-switch";
 import CardSettings from "./CardSettings";
+
+//Redux
+import { useDispatch, useSelector } from "react-redux";
+import { changeMenu, joinLobby } from "../../redux/actionCreators";
+
+//Hooks
 import { useWebsocket } from "../../socket";
-import { joinLobby } from "../../redux/actionCreators";
-export default function CreateLobbyMenu() {
+
+const modeOptions = [
+  { value: "standard", label: "Standard" },
+  { value: "timed", label: "Timed" },
+];
+
+const timeLimitOptions = [
+  { value: 60, label: "1 minute" },
+  { value: 180, label: "3 minutes" },
+  { value: 300, label: "5 minutes" },
+  { value: 600, label: "10 minutes" },
+  { value: 900, label: "15 minutes" },
+];
+
+export default function CreateLobby() {
   const dispatch = useDispatch();
+  const socket = useWebsocket();
+
+  const user = useSelector((state) => state.user);
   const [cardOptionsOpen, setCardOptionsOpen] = useState(false);
   const [cardOptions, setCardOptions] = useState({});
+  const [gameMode, setGameMode] = useState("standard");
+  const [timeLimitIndex, setTimeLimitIndex] = useState(2);
+  const [maxPlayers, setMaxPlayers] = useState(4);
+
   const onSave = (options) => {
     setCardOptions(options);
     setCardOptionsOpen(false);
   };
-  const modeOptions = [
-    { value: "standard", label: "Standard" },
-    { value: "timed", label: "Timed" },
-  ];
 
-  const user = useSelector((state) => state.user);
-  const [gameMode, setGameMode] = useState("standard");
-  const [timeLimitIndex, setTimeLimitIndex] = useState(2);
-  const [maxPlayers, setMaxPlayers] = useState(4);
-  const socket = useWebsocket();
-  const timeLimitOptions = [
-    { value: 60, label: "1 minute" },
-    { value: 180, label: "3 minutes" },
-    { value: 300, label: "5 minutes" },
-    { value: 600, label: "10 minutes" },
-    { value: 900, label: "15 minutes" },
-  ];
   const onIncrement = () => {
     if (timeLimitIndex === 4) return;
     setTimeLimitIndex(timeLimitIndex + 1);
@@ -84,7 +93,7 @@ export default function CreateLobbyMenu() {
             <div className="flex flex-row items-center">
               <h3 className="menu-label mr-2">Game Mode</h3>
               <a
-                className="text-pastelRed-300 hover:text-pastelRed-200 cursor-pointer"
+                className="text-pastelBlue-500 hover:text-pastelBlue-300 cursor-pointer"
                 onClick={() => {
                   console.log("show info");
                 }}
@@ -132,7 +141,7 @@ export default function CreateLobbyMenu() {
 
           <div className="m-2 mb-5">
             <a
-              className="text-pastelRed-300 hover:text-pastelRed-200 cursor-pointer flex flex-row items-center"
+              className="text-pastelBlue-500 hover:text-pastelBlue-400 cursor-pointer flex flex-row items-center"
               onClick={() => {
                 setCardOptionsOpen(true);
               }}
@@ -151,10 +160,10 @@ export default function CreateLobbyMenu() {
             color="danger"
             size="md"
             onClick={() => {
-              dispatch(changeMenu("playPartyMode"));
+              dispatch(changeMenu("party-mode"));
             }}
           >
-            <MdExitToApp className="button-icon mr-2" flipHorizontal />
+            <MdExitToApp className="button-icon mr-2" />
             Back
           </MenuButton>
         </div>

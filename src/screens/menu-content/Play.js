@@ -1,15 +1,14 @@
 import React from "react";
 
 //Components
-import MenuButton from "../../components/MenuButton";
-import { FaGlobe } from "react-icons/fa";
+import MenuButton from "../../components/menu/MenuButton";
 import { MdPerson, MdPeopleAlt, MdExitToApp } from "react-icons/md";
 
 //Redux
 import { useDispatch } from "react-redux";
 import { changeMenu } from "../../redux/actionCreators";
 
-export default function PlayMenu() {
+export default function Play() {
   const dispatch = useDispatch();
   return (
     <div className="flex flex-col">
@@ -18,7 +17,7 @@ export default function PlayMenu() {
         color="primary"
         size="md"
         onClick={() => {
-          dispatch(changeMenu("singlePlayer"));
+          dispatch(changeMenu("solo-mode"));
         }}
       >
         <MdPerson className="button-icon mr-2" />
@@ -29,7 +28,7 @@ export default function PlayMenu() {
         color="primary"
         size="md"
         onClick={() => {
-          dispatch(changeMenu("playPartyMode"));
+          dispatch(changeMenu("party-mode"));
         }}
       >
         <MdPeopleAlt className="button-icon mr-2" />
@@ -37,24 +36,13 @@ export default function PlayMenu() {
       </MenuButton>
 
       <MenuButton
-        color="primary"
-        size="md"
-        onClick={() => {
-          console.log("new multi player");
-        }}
-      >
-        <FaGlobe className="button-icon mr-2" />
-        Play Online
-      </MenuButton>
-
-      <MenuButton
         color="danger"
         size="md"
         onClick={() => {
-          dispatch(changeMenu("main"));
+          dispatch(changeMenu("home"));
         }}
       >
-        <MdExitToApp className="button-icon mr-2" flipHorizontal />
+        <MdExitToApp className="button-icon mr-2" />
         Back
       </MenuButton>
     </div>

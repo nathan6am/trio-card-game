@@ -1,7 +1,7 @@
 import React from "react";
 
 //Components
-import MenuButton from "../../components/MenuButton";
+import MenuButton from "../../components/menu/MenuButton";
 import { FaEdit, FaPlay } from "react-icons/fa";
 import { MdExitToApp } from "react-icons/md";
 
@@ -9,7 +9,7 @@ import { MdExitToApp } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { changeMenu } from "../../redux/actionCreators";
 
-export default function PartyModeMenu() {
+export default function PartyMode() {
   const dispatch = useDispatch();
 
   return (
@@ -19,7 +19,7 @@ export default function PartyModeMenu() {
         color="success"
         size="md"
         onClick={() => {
-          dispatch(changeMenu("createLobby"));
+          dispatch(changeMenu("create-lobby"));
         }}
       >
         <FaPlay className="button-icon mr-2" />
@@ -29,7 +29,7 @@ export default function PartyModeMenu() {
         color="primary"
         size="md"
         onClick={() => {
-          dispatch(changeMenu("joinLobby"));
+          dispatch(changeMenu("join-lobby"));
         }}
       >
         <FaEdit className="button-icon mr-2" />

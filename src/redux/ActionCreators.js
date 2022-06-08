@@ -87,3 +87,24 @@ export const leaveLobby = () => {
     type: actionTypes.LEAVE_LOBBY,
   };
 };
+
+export const updateSettings = (settings) => {
+  const volume = settings.volume / 100;
+  return {
+    type: actionTypes.UPDATE_SETTINGS,
+    payload: {
+      volume: volume,
+      mute: settings.mute,
+      theme: settings.theme,
+    },
+  };
+};
+export const saveGameSettings = (options) => {
+  return {
+    type: actionTypes.SAVE_GAME_SETTINGS,
+    payload: {
+      gameOptions: options.gameOptions,
+      deckOptions: options.deckOptions,
+    },
+  };
+};

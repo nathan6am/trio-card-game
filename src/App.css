@@ -59,7 +59,6 @@
     rgba(181, 210, 247, 1) 0%,
     rgba(72, 115, 157, 1) 100%
   );
-  box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.2);
 }
 
 .dark-bg {
@@ -70,12 +69,11 @@
     rgba(12, 23, 38, 1) 97%,
     rgba(12, 23, 38, 1) 100%
   );
-  box-shadow: 0 10px 10px -5px rgba(0, 0, 0, 0.2);
 }
-.offwhite-bg {
+.dark-solid-bg {
   background-color: #181716;
 }
-.offwhite-bg2 {
+.offwhite-bg {
   background-color: #fdf4dc;
 }
 .menu-card {

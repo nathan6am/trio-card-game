@@ -1,8 +1,9 @@
 import React from "react";
 import useSound from "use-sound";
-import rolloverClick from "../sounds/RolloverClick.mp3";
-import select from "../sounds/Select.mp3";
+import rolloverClick from "../../sounds/RolloverClick.mp3";
+import select from "../../sounds/Select.mp3";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useSelector } from "react-redux";
 const buttonConfig = {
   primary: `bg-pastelBlue-400 hover:bg-pastelBlue-300 border-pastelBlue-500 hover:border-pastelBlue-400`,
   secondary:
@@ -21,8 +22,11 @@ const buttonConfig = {
 };
 
 const MenuButton = ({ children, color, onClick, size, disabled, loading }) => {
-  const [playRolloverClick] = useSound(rolloverClick);
-  const [playSelect] = useSound(select);
+  const { volume, mute } = useSelector((state) => state.settings);
+  const [playRolloverClick] = useSound(rolloverClick, {
+    volume: mute ? 0 : volume,
+  });
+  const [playSelect] = useSound(select, { volume: mute ? 0 : volume });
   return (
     <button
       disabled={disabled}

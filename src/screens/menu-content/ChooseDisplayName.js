@@ -1,31 +1,26 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 
-import MenuButton from "../../components/MenuButton";
+//Components
+import MenuButton from "../../components/menu/MenuButton";
 
+//Redux
 import { useDispatch, useSelector } from "react-redux";
 import { changeMenu, changeDisplayName } from "../../redux/actionCreators";
-import isTextClean from "../../services/profanityFilter";
-export default function LandingMenu() {
+
+//Util
+import isTextClean from "../../util/profanityFilter";
+
+export default function ChooseDisplayName() {
   const dispatch = useDispatch();
   const inputRef = useRef();
-
-  //Cleanup
-  useEffect(() => {
-    return () => {};
-  }, []);
-
   const [loading, setLoading] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [isNameValid, setIsNameValid] = useState(true);
 
   const handleChange = (e) => {
-    if (!isNameValid) {
-      setIsNameValid(true);
-    }
-
+    if (!isNameValid) setIsNameValid(true);
     const { value, maxLength } = e.target;
     const text = value.slice(0, maxLength);
-
     setDisplayName(text);
   };
 
@@ -41,7 +36,7 @@ export default function LandingMenu() {
         } else {
           setLoading(false);
           dispatch(changeDisplayName(displayName));
-          dispatch(changeMenu("main"));
+          dispatch(changeMenu("home"));
         }
       })
       .catch((e) => console.error(e.message));

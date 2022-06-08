@@ -1,22 +1,22 @@
 import { SET_ACTIVE_MENU } from "../actions";
 
 const initialState = {
-  activeMenu: "landing",
-  previousMenu: "landing",
+  activeMenu: "choose-name",
+  previousMenu: "choose-name",
 };
 
 export default function (state = initialState, action) {
   const registeredMenus = [
-    "main",
+    "home",
+    "choose-name",
     "play",
     "setttings",
-    "singlePlayer",
-    "playOnline",
-    "playPartyMode",
-    "singleOptions",
-    "createLobby",
-    "joinLobby",
-    "adminLeft",
+    "solo-mode",
+    "party-mode",
+    "join-lobby",
+    "create-lobby",
+    "admin-left",
+    "settings",
   ];
   switch (action.type) {
     case SET_ACTIVE_MENU:

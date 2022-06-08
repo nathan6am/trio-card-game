@@ -1,39 +1,50 @@
 import React, { useState } from "react";
-import MenuButton from "../../components/MenuButton";
-import { FaEdit, FaInfoCircle, FaPlay, FaGlobe } from "react-icons/fa";
-import { MdExitToApp } from "react-icons/md";
-import IncrementSelector from "../../components/IncrementSelector";
-import { useDispatch } from "react-redux";
-import { changeMenu } from "../../redux/actionCreators";
+
+//Components
+import MenuButton from "../../components/menu/MenuButton";
 import Select from "react-select";
 import Switch from "react-switch";
+import { FaEdit, FaInfoCircle, FaPlay } from "react-icons/fa";
+import { MdExitToApp } from "react-icons/md";
+import IncrementSelector from "../../components/menu/IncrementSelector";
 import CardSettings from "./CardSettings";
+
+//Redux
+import { useDispatch } from "react-redux";
 import {
   createSinglePlayerGame,
   startSinglePlayerGame,
+  changeMenu,
+  saveGameSettings,
 } from "../../redux/actionCreators";
-export default function SinglePlayerMenu() {
+
+const timeLimitOptions = [
+  { value: 60, label: "1 minute" },
+  { value: 180, label: "3 minutes" },
+  { value: 300, label: "5 minutes" },
+  { value: 600, label: "10 minutes" },
+  { value: 900, label: "15 minutes" },
+];
+const modeOptions = [
+  { value: "standard", label: "Standard" },
+  { value: "zen", label: "Zen" },
+  { value: "timed", label: "Timed" },
+];
+
+export default function SoloMode() {
   const dispatch = useDispatch();
+
   const [cardOptionsOpen, setCardOptionsOpen] = useState(false);
   const [cardOptions, setCardOptions] = useState({});
+  const [gameMode, setGameMode] = useState("standard");
+  const [timeLimitIndex, setTimeLimitIndex] = useState(2);
+  const [hintsEnabled, setHintsEnabled] = useState(false);
+
   const onSave = (options) => {
     setCardOptions(options);
     setCardOptionsOpen(false);
   };
-  const modeOptions = [
-    { value: "standard", label: "Standard" },
-    { value: "zen", label: "Zen" },
-    { value: "timed", label: "Timed" },
-  ];
-  const [gameMode, setGameMode] = useState("standard");
-  const [timeLimitIndex, setTimeLimitIndex] = useState(2);
-  const timeLimitOptions = [
-    { value: 60, label: "1 minute" },
-    { value: 180, label: "3 minutes" },
-    { value: 300, label: "5 minutes" },
-    { value: 600, label: "10 minutes" },
-    { value: 900, label: "15 minutes" },
-  ];
+
   const onIncrement = () => {
     if (timeLimitIndex === 4) return;
     setTimeLimitIndex(timeLimitIndex + 1);
@@ -42,7 +53,6 @@ export default function SinglePlayerMenu() {
     if (timeLimitIndex === 0) return;
     setTimeLimitIndex(timeLimitIndex - 1);
   };
-  const [hintsEnabled, setHintsEnabled] = useState(false);
 
   const getGameOptions = () => {
     return {
@@ -107,7 +117,7 @@ export default function SinglePlayerMenu() {
             </div>
             <div className="m-2 mb-5">
               <a
-                className="text-pastelRed-300 hover:text-pastelRed-200 cursor-pointer flex flex-row items-center"
+                className="text-pastelBlue-500 hover:text-pastelBlue-400 cursor-pointer flex flex-row items-center"
                 onClick={() => {
                   setCardOptionsOpen(true);
                 }}
@@ -123,6 +133,12 @@ export default function SinglePlayerMenu() {
               size="md"
               onClick={() => {
                 dispatch(createSinglePlayerGame(getGameOptions(), cardOptions));
+                dispatch(
+                  saveGameSettings({
+                    gameOptions: getGameOptions(),
+                    deckOptions: cardOptions,
+                  })
+                );
                 dispatch(startSinglePlayerGame());
               }}
             >
@@ -136,10 +152,7 @@ export default function SinglePlayerMenu() {
                 dispatch(changeMenu("play"));
               }}
             >
-              <MdExitToApp
-                className="inline text-xl mb-1 mr-2"
-                flipHorizontal
-              />
+              <MdExitToApp className="inline text-xl mb-1 mr-2" />
               Back
             </MenuButton>
           </div>

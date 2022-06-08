@@ -1,17 +1,15 @@
 import React from "react";
-import MenuButton from "../../components/MenuButton";
+import MenuButton from "../../components/menu/MenuButton";
 import { FaEdit, FaScroll, FaPlay } from "react-icons/fa";
-import { MdPerson, MdPeopleAlt, MdSettings } from "react-icons/md";
+import { MdSettings } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { changeMenu } from "../../redux/actionCreators";
 
-export default function MainMenu() {
+export default function Home() {
   const dispatch = useDispatch();
   return (
     <div className="flex flex-col">
-      <h1 className="text-center text-pastelRed-300 text-2xl mb-3 menu-title">
-        Main Menu
-      </h1>
+      <h1 className="menu-header menu-title">Main Menu</h1>
       <MenuButton
         color="success"
         size="md"
@@ -19,17 +17,17 @@ export default function MainMenu() {
           dispatch(changeMenu("play"));
         }}
       >
-        <FaPlay className="inline text-xl  mr-2" />
+        <FaPlay className="button-icon" />
         Play Now
       </MenuButton>
       <MenuButton
         color="primary"
         size="md"
         onClick={() => {
-          console.log("new single player");
+          dispatch(changeMenu("choose-name"));
         }}
       >
-        <FaEdit className="inline text-xl mb-1 mr-2" />
+        <FaEdit className="button-icon" />
         Change Name
       </MenuButton>
 
@@ -37,20 +35,20 @@ export default function MainMenu() {
         color="primary"
         size="md"
         onClick={() => {
-          console.log("new multi player");
+          console.log("open rules");
         }}
       >
-        <FaScroll className="inline text-xl mb-1 mr-2" />
+        <FaScroll className="button-icon" />
         How to Play
       </MenuButton>
       <MenuButton
         color="primary"
         size="md"
         onClick={() => {
-          console.log("new multi player");
+          dispatch(changeMenu("settings"));
         }}
       >
-        <MdSettings className="inline text-xl mb-1 mr-2" />
+        <MdSettings className="button-icon" />
         Settings
       </MenuButton>
     </div>

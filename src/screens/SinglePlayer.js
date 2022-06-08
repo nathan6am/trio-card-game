@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from "react";
-import CardGrid from "../components/CardGrid";
+import CardGrid from "../components/game/CardGrid";
 import { useSelector, useDispatch } from "react-redux";
-import { verifySet } from "../services/gameLogic";
+import { verifySet } from "../util/gameLogic";
 import { scoreSinglePlayerGame } from "../redux/actionCreators";
-import CardSettings from "./menus/CardSettings";
+
 //Timer Hooks
 import { useStopwatch, useTimer } from "react-timer-hook";
-import { toSeconds } from "../services/timeUtil";
+import { toSeconds } from "../util/timeUtil";
 
 // Sound Effects Imports
 import useSound from "use-sound";
 import Success from "../sounds/Success.mp3";
 import Fail from "../sounds/Fail.mp3";
-import TimerProgressBar from "../components/TimerProgressBar";
 
 function SinglePlayer() {
   const game = useSelector((state) => state.singlePlayerGame.game); // Game Object from redux store
@@ -32,8 +31,9 @@ function SinglePlayer() {
   });
 
   //Sound effects
-  const [playSuccess] = useSound(Success);
-  const [playFail] = useSound(Fail);
+  const { volume, mute } = useSelector((state) => state.settings);
+  const [playSuccess] = useSound(Success, { volume: mute ? 0 : volume });
+  const [playFail] = useSound(Fail, { volume: mute ? 0 : volume });
 
   //Manage Selected Cards
   const [activeCards, setActiveCards] = useState([]);
@@ -69,7 +69,7 @@ function SinglePlayer() {
   return (
     <div className="flex flex-col items-center justify-center h-full">
       <div className="container md:p-5">
-        <div className="md:mx-5 md:p-5 text-white bg-black/[0.2] rounded-md flex flex-row justify-between">
+        <div className=" md:mx-3 text-white p-2 md:p-5 bg-black/[0.2] rounded-md flex flex-row justify-between">
           <div className="flex flex-col md:flex-row ">
             <p className="mx-3">{`Trios found: ${game.stats.score}`}</p>
             {timeLimit ? (

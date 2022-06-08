@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
-import CardGrid from "../components/CardGrid";
+import CardGrid from "../components/game/CardGrid";
 import { useSelector, useDispatch } from "react-redux";
-import { verifySet } from "../services/gameLogic";
-import { scoreSinglePlayerGame } from "../redux/actionCreators";
+import { verifySet } from "../util/gameLogic";
 import { useWebsocket } from "../socket";
 //Timer Hooks
 import { useStopwatch, useTimer } from "react-timer-hook";
-import { toSeconds } from "../services/timeUtil";
+import { toSeconds } from "../util/timeUtil";
 import { updateLobby } from "../redux/actionCreators";
 // Sound Effects Imports
 import useSound from "use-sound";
 import Success from "../sounds/Success.mp3";
 import Fail from "../sounds/Fail.mp3";
-import TimerProgressBar from "../components/TimerProgressBar";
 
 export default function MultiPlayer() {
   const dispatch = useDispatch();

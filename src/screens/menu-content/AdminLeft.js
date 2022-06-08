@@ -1,6 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
-
-import MenuButton from "../../components/MenuButton";
+import MenuButton from "../../components/menu/MenuButton";
 
 import { useDispatch } from "react-redux";
 import { changeMenu } from "../../redux/actionCreators";
@@ -16,7 +14,7 @@ export default function AdminLeft() {
         color={"success"}
         size="md"
         onClick={() => {
-          dispactch(changeMenu("playPartyMode"));
+          dispactch(changeMenu("party-mode"));
         }}
       >
         Continue to menu

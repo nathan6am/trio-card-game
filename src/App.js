@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import "@material-tailwind/react/tailwind.css";
-import Home from "./screens/Home";
+import Home from "./screens/Menu";
 import { useWebsocket } from "./socket";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStoredSocketId } from "./redux/actionCreators";
@@ -15,6 +14,7 @@ export default function App() {
 
   const [display, setDisplay] = useState("home");
   const storedId = useSelector((state) => state.user.socketId);
+  const themeClass = useSelector((state) => state.settings.theme);
   const singlePlayerActive = useSelector(
     (state) => state.singlePlayerGame.active
   );
@@ -32,12 +32,9 @@ export default function App() {
 
   useEffect(() => {
     socket?.on("connect", () => {
-      console.log("connected");
-      console.log(socket.id);
       dispatch(updateStoredSocketId(socket.id));
     });
     if (displayName) {
-      console.log(displayName);
       socket?.emit("user:setDisplayName", displayName);
     }
     return () => {
@@ -46,7 +43,9 @@ export default function App() {
   }, [socket, dispatch, displayName]);
   return (
     <>
-      <div className="flex items-stretch min-h-screen w-screen items-center justify-center blue-bg">
+      <div
+        className={`flex items-stretch min-h-screen w-screen items-center justify-center ${themeClass}`}
+      >
         <ScreenToDisplay display={display} />
       </div>
     </>

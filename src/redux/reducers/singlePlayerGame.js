@@ -4,7 +4,7 @@ import {
   END_SINGLE_PLAYER,
   CREATE_SINGLE_PLAYER,
 } from "../actions";
-import { newDeck, updateCards } from "../../services/gameLogic";
+import { newDeck, updateCards } from "../../util/gameLogic";
 
 const initialState = {
   active: false,

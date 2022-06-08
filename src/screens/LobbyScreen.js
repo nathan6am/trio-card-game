@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useWebsocket } from "../socket";
 import { useSelector, useDispatch } from "react-redux";
 import {
   changeMenu,
@@ -6,22 +7,25 @@ import {
   updateLobbyGameState,
   leaveLobby,
 } from "../redux/actionCreators";
-import { useWebsocket } from "../socket";
-import LobbyMenu from "./menus/LobbyMenu";
+
+import LobbyMenu from "../components/lobby/LobbyMenu";
 import MultiPlayer from "./MultiPlayer";
-import GameRecap from "./GameRecap";
+import GameRecap from "../components/lobby/GameRecap";
+
 export default function LobbyScreen() {
+  const dispatch = useDispatch();
   const socket = useWebsocket();
+
   const user = useSelector((state) => state.user);
   const gameActive = useSelector((state) => state.lobby.gameActive);
   const game = useSelector((state) => state.lobby.game);
-  const dispatch = useDispatch();
+
   useEffect(() => {
     socket.on("lobby:update", (lobby) => {
       dispatch(updateLobby(lobby, user));
     });
     socket.on("lobby:admin-left", () => {
-      dispatch(changeMenu("adminLeft"));
+      dispatch(changeMenu("admin-left"));
       dispatch(leaveLobby());
     });
     socket.on("game:update", (game) => {
