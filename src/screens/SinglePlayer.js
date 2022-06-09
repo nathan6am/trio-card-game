@@ -100,7 +100,7 @@ function SinglePlayer() {
         <SinglePlayerRecap onRestart={onRestart} />
       ) : (
         <div className="flex flex-col items-center justify-center h-full w-full">
-          <div className="container md:p-5 h-screen flex flex-col items-center justify-center">
+          <div className="container md:p-5 h-screen flex flex-col items-center">
             <InfoBar
               limitTimer={limitTimer}
               gameTimer={gameTimer}
