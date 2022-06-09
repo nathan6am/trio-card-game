@@ -9,7 +9,7 @@ export default function CardGrid({
   percentTimeRemaining,
 }) {
   return (
-    <div className="flex flex-col mt-5">
+    <div className="flex flex-col mt-5 w-full">
       <div className="px-5 md:max-w-[80vw]">
         {timeLimit && <TimerProgressBar percent={percentTimeRemaining} />}
       </div>
