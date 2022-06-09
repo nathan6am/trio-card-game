@@ -8,7 +8,7 @@ export default function InfoBar({
   timeLimit,
 }) {
   return (
-    <div className=" md:mx-5 text-white p-2 md:p-5 bg-black/[0.2] rounded-md flex flex-row justify-between w-full">
+    <div className=" md:mx-5 text-white p-2 md:p-5 bg-black/[0.2] rounded-md flex flex-row justify-between w-[80vw]">
       <div className="flex flex-col md:flex-row ">
         <p className="mx-3">{`Trios found: ${game.stats.score}`}</p>
         {timeLimit ? (
