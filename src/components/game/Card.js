@@ -5,13 +5,13 @@ import CardSymbol from "./CardSymbol";
 export default function Card({ card, setActive, active }) {
   return (
     <div
-      className={`flex aspect-[7/5] shadow-lg sm:p-1 m-2  min-h-20 sm:m-0 rounded-lg justify-center bg-neutral-50 hover:bg-neutral-200 ${
+      className={`flex aspect-[7/5] shadow-lg sm:p-1 m-2  sm:m-0 rounded-lg justify-center bg-neutral-50 hover:bg-neutral-200 ${
         active && "ring-4 ring-pastelGreen-300"
       }`}
       id={card.id}
       onClick={() => setActive(card)}
     >
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center h-full w-full">
         {[...Array(card.count)].map((e, idx) => {
           return (
             <CardSymbol
