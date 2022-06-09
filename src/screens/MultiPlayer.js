@@ -78,7 +78,7 @@ export default function MultiPlayer({ onQuit }) {
     }
   }, [activeCards, lobby, playFail, playSuccess, socket, user]);
   return (
-    <div className="flex items-center justify-center h-full w-full">
+    <div className="flex flex-col items-center h-full w-full">
       <div className="container">
         {hasStarted ? (
           <div className="flex flex-col items-center justify-center">
