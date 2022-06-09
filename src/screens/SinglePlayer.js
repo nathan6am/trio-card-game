@@ -99,8 +99,8 @@ function SinglePlayer() {
       {game.isOver ? (
         <SinglePlayerRecap onRestart={onRestart} />
       ) : (
-        <div className="flex flex-col items-center justify-center h-full">
-          <div className="container md:p-5 items-center justify-center flex flex-col h-screen">
+        <div className="flex flex-col items-center justify-center h-full w-full">
+          <div className="container md:p-5 items-center justify-center flex flex-col h-screen w-full">
             <InfoBar
               limitTimer={limitTimer}
               gameTimer={gameTimer}
