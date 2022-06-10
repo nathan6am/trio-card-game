@@ -57,7 +57,7 @@ export default function LobbyScreen() {
     socket.on("game:time-limit-reached", (game) => {
       dispatch(updateLobbyGameState(game));
     });
-  }, [dispatch, socket, user]);
+  }, []);
 
   return (
     <div className="flex-1 h-screen overflow-y-auto flex-col">
