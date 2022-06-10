@@ -40,7 +40,7 @@ export default function App() {
     return () => {
       socket?.off("connect");
     };
-  }, []);
+  }, [socket, dispatch, displayName]);
   return (
     <>
       <div

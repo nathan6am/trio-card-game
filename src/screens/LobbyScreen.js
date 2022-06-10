@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useWebsocket } from "../socket";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -15,13 +15,13 @@ import GameRecap from "../components/lobby/GameRecap";
 export default function LobbyScreen() {
   const dispatch = useDispatch();
   const socket = useWebsocket();
-
+  const socketRef = useRef();
   const user = useSelector((state) => state.user);
   const [recapShown, setRecapShown] = useState(false);
   const gameActive = useSelector((state) => state.lobby.gameActive);
   const lobby = useSelector((state) => state.lobby);
 
-  const onExit = () => {
+  const onExit = useCallback(() => {
     socket.emit("lobby:leave", { user: user, lobbyId: lobby.id }, (success) => {
       if (success) {
         dispatch(changeMenu("party-mode"));
@@ -30,7 +30,7 @@ export default function LobbyScreen() {
         console.error("something went wrong");
       }
     });
-  };
+  }, []);
 
   const hideRecap = () => {
     setRecapShown(false);
@@ -54,9 +54,25 @@ export default function LobbyScreen() {
       setRecapShown(true);
       dispatch(updateLobby(lobby, user));
     });
-    socket.on("game:time-limit-reached", (game) => {
-      dispatch(updateLobbyGameState(game));
-    });
+    return () => {
+      socket.off("lobby:update", (lobby) => {
+        if (!lobby) {
+          console.error("something went wrong");
+        }
+        dispatch(updateLobby(lobby, user));
+      });
+      socket.off("lobby:admin-left", () => {
+        dispatch(changeMenu("admin-left"));
+        dispatch(leaveLobby());
+      });
+      socket.off("game:update", (game) => {
+        dispatch(updateLobbyGameState(game));
+      });
+      socket.off("game:ended", (lobby) => {
+        setRecapShown(true);
+        dispatch(updateLobby(lobby, user));
+      });
+    };
   }, []);
 
   return (

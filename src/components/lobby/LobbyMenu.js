@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { PulseLoader } from "react-spinners";
 import { MdContentCopy, MdExitToApp } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
@@ -22,13 +22,13 @@ export default function LobbyMenu({ onExit }) {
     setTooltipText("Copied to clipboard!");
   };
 
-  const onStart = () => {
+  const onStart = useCallback(() => {
     socket.emit("game:start", lobby.id, function (success) {
       if (!success) console.error("Unable to start game");
     });
-  };
+  }, []);
 
-  const notReady = () => {
+  const notReady = useCallback(() => {
     socket.emit(
       "lobby:set-ready",
       {
@@ -40,8 +40,8 @@ export default function LobbyMenu({ onExit }) {
         if (!success) console.error("Something went wrong");
       }
     );
-  };
-  const readyUp = () => {
+  }, []);
+  const readyUp = useCallback(() => {
     socket.emit(
       "lobby:set-ready",
       {
@@ -53,7 +53,7 @@ export default function LobbyMenu({ onExit }) {
         if (!success) console.error("Something went wrong");
       }
     );
-  };
+  }, []);
 
   return (
     <div className="flex flex-grow items-center justify-center">
