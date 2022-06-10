@@ -1,6 +1,6 @@
 # Trio Card Game
 
-This is the front-end repository for this project. The server repository is available [here](https://github.com.nathan6am/trio-server)
+This is the front-end repository for this project. The server repository is available [here](https://github.com/nathan6am/trio-server)
 
 ## About this project
 
