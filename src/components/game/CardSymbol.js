@@ -131,7 +131,7 @@ export default function CardSymbol({ shape, fill, color }) {
     }
   };
   return (
-    <svg viewBox="-5 -5 59 109" height="75%">
+    <svg viewBox="-5 -5 59 109" className="h-[75%] w-auto min-h-20">
       <path
         stroke={colorCodes[color]}
         strokeWidth={2}
