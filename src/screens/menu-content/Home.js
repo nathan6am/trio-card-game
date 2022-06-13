@@ -35,7 +35,7 @@ export default function Home() {
         color="primary"
         size="md"
         onClick={() => {
-          console.log("open rules");
+          dispatch(changeMenu("rules"));
         }}
       >
         <FaScroll className="button-icon" />

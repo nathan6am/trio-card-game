@@ -108,7 +108,7 @@ export default function MultiPlayer({ onQuit }) {
           </div>
         ) : (
           <div className="container">
-            <div className="flex w-full h-full justify-center items-center flex-col">
+            <div className="flex w-full h-[600px] justify-center items-center flex-col">
               <h1 className="menu-header menu-title text-4xl text-pastelRed-400 text-center">
                 Get Ready!
               </h1>
@@ -125,17 +125,22 @@ export default function MultiPlayer({ onQuit }) {
 
 function ScoreBoard({ scores, user }) {
   return (
-    <div className="w-60 flex flex-col bg-black/[0.2] rounded p-4 m-4 px-10">
-      <h1 className="menu-header menu-title  text-white text-xl">Scores</h1>
-      {scores.map((score) => {
-        return (
-          <p key={score.user.socketId} className="text-white">{`${
-            score.user.socketId === user.socketId
-              ? score.user.displayName + " (You)"
-              : score.user.displayName
-          }: ${score.score}`}</p>
-        );
-      })}
+    <div className="bg-black/[0.2] rounded p-4 m-4 px-10">
+      <h1 className="menu-header menu-title text-left text-white text-xl">
+        Scores
+      </h1>
+
+      <div className="flex flex-row ">
+        {scores.map((score) => {
+          return (
+            <p key={score.user.socketId} className="text-white mx-4">{`${
+              score.user.socketId === user.socketId
+                ? score.user.displayName + " (You)"
+                : score.user.displayName
+            }: ${score.score}`}</p>
+          );
+        })}
+      </div>
     </div>
   );
 }

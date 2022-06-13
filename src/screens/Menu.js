@@ -11,6 +11,7 @@ import {
   Play,
   SoloMode,
   Settings,
+  Rules,
 } from "../screens/menu-content";
 export default function Menu() {
   const displayName = useSelector((state) => state.user.displayName);
@@ -52,6 +53,8 @@ const MenuContent = () => {
       return <JoinLobby />;
     case "admin-left":
       return <AdminLeft />;
+    case "rules":
+      return <Rules />;
     default:
       return <Home />;
   }

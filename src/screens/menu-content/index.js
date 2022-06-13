@@ -8,6 +8,7 @@ import SoloMode from "./SoloMode";
 import PartyMode from "./PartyMode";
 import Play from "./Play";
 import Settings from "./Settings";
+import Rules from "./Rules";
 export {
   AdminLeft,
   CardSettings,
@@ -19,4 +20,5 @@ export {
   PartyMode,
   Play,
   Settings,
+  Rules,
 };

@@ -17,6 +17,7 @@ export default function (state = initialState, action) {
     "create-lobby",
     "admin-left",
     "settings",
+    "rules",
   ];
   switch (action.type) {
     case SET_ACTIVE_MENU:
