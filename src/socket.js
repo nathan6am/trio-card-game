@@ -3,6 +3,7 @@ import io from "socket.io-client";
 
 export const WebsocketContext = createContext(null);
 const socketUrl = process.env.REACT_APP_SOCKET_URL;
+const certificate = process.env.REACT_APP_CERTIFICATE;
 const WebsocketProvider = ({ children }) => {
   const [connection, setConnection] = useState(null);
 
@@ -10,7 +11,11 @@ const WebsocketProvider = ({ children }) => {
 
   useEffect(() => {
     try {
-      const socket = io(socketUrl, options);
+      const socket = io(socketUrl, {
+        secure: true,
+        rejectUnauthorized: false,
+        ca: certificate,
+      });
       setConnection(socket);
     } catch (err) {
       console.log(err);
