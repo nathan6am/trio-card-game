@@ -1,15 +1,8 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-} from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState, useRef } from "react";
 import io from "socket.io-client";
 
 export const WebsocketContext = createContext(null);
-
+const socketUrl = process.env.REACT_APP_SOCKET_URL;
 const WebsocketProvider = ({ children }) => {
   const [connection, setConnection] = useState(null);
 
@@ -17,18 +10,14 @@ const WebsocketProvider = ({ children }) => {
 
   useEffect(() => {
     try {
-      const socket = io("https://damp-lowlands-35197.herokuapp.com/", options);
+      const socket = io(socketUrl, options);
       setConnection(socket);
     } catch (err) {
       console.log(err);
     }
   }, [options]);
 
-  return (
-    <WebsocketContext.Provider value={connection}>
-      {children}
-    </WebsocketContext.Provider>
-  );
+  return <WebsocketContext.Provider value={connection}>{children}</WebsocketContext.Provider>;
 };
 
 export const useWebsocket = () => {

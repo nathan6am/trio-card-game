@@ -15,9 +15,7 @@ export default function App() {
   const [display, setDisplay] = useState("home");
   const storedId = useSelector((state) => state.user.socketId);
   const themeClass = useSelector((state) => state.settings.theme);
-  const singlePlayerActive = useSelector(
-    (state) => state.singlePlayerGame.active
-  );
+  const singlePlayerActive = useSelector((state) => state.singlePlayerGame.active);
   const multiPlayerActive = useSelector((state) => state.lobby.gameActive);
   const inLobby = useSelector((state) => state.lobby.connectedToLobby);
   useEffect(() => {
@@ -43,9 +41,7 @@ export default function App() {
   }, [socket, dispatch, displayName]);
   return (
     <>
-      <div
-        className={`flex items-stretch min-h-screen w-screen items-center justify-center ${themeClass}`}
-      >
+      <div className={`flex items-stretch min-h-screen w-screen items-center justify-center ${themeClass}`}>
         <Toaster position="top-right" />
         <ScreenToDisplay display={display} />
       </div>
